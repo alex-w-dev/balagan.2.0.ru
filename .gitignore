@@ -8,3 +8,4 @@ web/sxd
 web/adminer.php
 web/user-files
 !/vendor/bower/
+!/web/sxd/backup/
