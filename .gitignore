@@ -1,0 +1,10 @@
+.idea
+bin
+res
+runtime
+vendor
+tests
+web/sxd
+web/adminer.php
+web/user-files
+!/vendor/bower/
