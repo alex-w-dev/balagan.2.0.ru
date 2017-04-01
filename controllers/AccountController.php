@@ -38,10 +38,8 @@ class AccountController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::classname(),
-                'only' => ['index', 'anketa', 'anketa_group', 'setvalue', 'get-result'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'anketa', 'anketa_group', 'setvalue', 'get-result'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

@@ -15,12 +15,12 @@ use yii\bootstrap\NavBar;
 $top_menu = BTopNav::widget([
     'options' => ['class' => 'list-inline top-nav'],
     'items' => [
-        ['label' => '<img src="/img/logo-min.png" class="top-user-bar-logo">', 'url' => ['/site/about'], 'options'=> ['class'=>"mobile-hide__important"]],
-        ['label' => 'Медплатформа', 'url' => ['/site/about']],
-        ['label' => 'Маркет', 'url' => ['/site/news']],
-        ['label' => 'Онлайн запись', 'url' => ['/account/index']],
-        ['label' => 'О компании', 'url' => ['/site/about']],
-        ['label' => 'Контакты', 'url' => ['/site/contact']],
+        ['label' => '<img src="/img/logo-min.png" class="top-user-bar-logo">', 'url' => ['/account'], 'options'=> ['class'=>"mobile-hide__important"]],
+        ['label' => 'Медплатформа', 'url' => ['/account']],
+        ['label' => 'Маркет', 'url' => ['/site/stub/3']],
+        ['label' => 'Онлайн запись', 'url' => ['/account']],
+        ['label' => 'О компании', 'url' => ['/site/stub/2']],
+        ['label' => 'Контакты', 'url' => ['/site/stub/1']],
     ],
     'encodeLabels' => false,
 ]);
