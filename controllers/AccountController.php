@@ -416,7 +416,7 @@ class AccountController extends Controller
             }
         }
 
-        return $this->render('get_result_response', get_defined_vars());
+        return $this->render('get_result_response', ['preparedActions' => $preparedActions]);
 
         /* END BLOCK RISKS */
 
@@ -563,17 +563,7 @@ class AccountController extends Controller
         }
         //debug($preparedActions);
 
-        return $this->render('get_result_response', get_defined_vars());
-
-
-        return $this->render('get_result', [
-            'risksPrepared' => $risksPrepared,
-            'risksFieldsNames' => $risksFieldsNames,
-            'minActionTimeStep' => $minActionTimeStep,
-            'maxActionTimeStep' => $maxActionTimeStep,
-            'preparedActions' => $preparedActions,
-            'actionNames' => $actionNames,
-        ]);
+        // return $this->render('get_result_response', get_defined_vars());
     }
 
     /* THIS ACTION IS ON TESTING MODE */
@@ -626,48 +616,5 @@ class AccountController extends Controller
         BioUserMeasure::setValue(Yii::$app->request->post());
         echo json_encode(['success' => true]);
     }
-
-
-    public function actionIndex1()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
-
-    public function actionIndex2()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
-
-    public function actionIndex3()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
-
-    public function actionIndex4()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
-
-    public function actionIndex5()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
-
-    public function actionIndex6()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
-
-    public function actionIndex7()
-    {
-        return $this->render('//site/error_build', ['name' => 'Страница находится в разработке']);
-    }
-
 
 }

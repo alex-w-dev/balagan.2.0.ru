@@ -15,11 +15,11 @@ use yii\bootstrap\NavBar;
 $top_menu = BTopNav::widget([
     'options' => ['class' => 'list-inline top-nav'],
     'items' => [
-        ['label' => 'О компании', 'url' => ['/site/about']],
-        ['label' => 'Новости', 'url' => ['/site/news']],
+        ['label' => 'О компании', 'url' => ['/site/stub']],
+        ['label' => 'Новости', 'url' => ['/site/stub']],
         ['label' => 'Медицинская платформа', 'url' => ['/account/index']],
-        ['label' => 'Сервисы', 'url' => ['/site/services']],
-        ['label' => 'Отзывы', 'url' => ['/site/reviews']],
+        ['label' => 'Сервисы', 'url' => ['/site/stub']],
+        ['label' => 'Отзывы', 'url' => ['/site/stub']],
         ['label' => 'Контакты', 'url' => ['/site/contact']],
         /*Yii::$app->user->isGuest ? (
         ['label' => 'Login', 'url' => ['/site/login']]
@@ -40,14 +40,14 @@ $left_menu = Nav::widget([
     /*'options' => ['class' => 'list-inline top-nav'],*/
     'items' => [
         ['label' => 'Мой профиль', 'url' => ['/account/index']],
-        ['label' => 'Полный отчет по состоянию здоровья', 'url' => ['/account/index1']],
-        ['label' => 'Риски для здоровья', 'url' => ['/account/index2']],
-        ['label' => 'Медико-профилактические мероприятия', 'url' => ['/account/index3']],
-        ['label' => 'Комплексная индивидуальная программа', 'url' => ['/account/index4']],
-        ['label' => 'История лечения', 'url' => ['/account/index5']],
-        ['label' => 'Результаты анализов', 'url' => ['/account/index6']],
-        ['label' => 'История покупок', 'url' => ['/account/index7']],
-        ['label' => 'Возврат 2-НДФЛ', 'url' => ['/account/index8']],
+        ['label' => 'Полный отчет по состоянию здоровья', 'url' => ['/site/stub']],
+        ['label' => 'Риски для здоровья', 'url' => ['/site/stub']],
+        ['label' => 'Медико-профилактические мероприятия', 'url' => ['/site/stub']],
+        ['label' => 'Комплексная индивидуальная программа', 'url' => ['/site/stub']],
+        ['label' => 'История лечения', 'url' => ['/site/stub']],
+        ['label' => 'Результаты анализов', 'url' => ['/site/stub']],
+        ['label' => 'История покупок', 'url' => ['/site/stub']],
+        ['label' => 'Возврат 2-НДФЛ', 'url' => ['/site/stub']],
         ['label' => 'Анкета', 'url' => ['/account/anketa']],
     ],
 ]);
