@@ -62,7 +62,7 @@ $this->title = 'Личный кабинет';
             </div>
         </div>
     </div>
-    <div class="row prfl-row">
+    <!--<div class="row prfl-row">
         <div class="prfl-row-title">
             <h2>Риски для здоровья</h2>
         </div>
@@ -300,8 +300,8 @@ $this->title = 'Личный кабинет';
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row prfl-row prfl-row-calendar">
+    </div>-->
+    <!--<div class="row prfl-row prfl-row-calendar">
         <div class="prfl-row-title mobile-hide">
             <h2>Ближайшие медико-профилактические мероприятия</h2>
         </div>
@@ -501,8 +501,8 @@ $this->title = 'Личный кабинет';
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row prfl-row">
+    </div>-->
+    <!--<div class="row prfl-row">
         <div class="prfl-row-title">
             <h2>Дополнительные исследования проблемных зон</h2>
         </div>
@@ -576,8 +576,8 @@ $this->title = 'Личный кабинет';
                 <a href="#" class="button bio-slick-list-button js-destroy-slick">Смотреть все</a>
             </div>
         </div>
-    </div>
-    <div class="row prfl-row">
+    </div>-->
+    <!--<div class="row prfl-row">
         <div class="prfl-row-title">
             <h2>Сервисы</h2>
         </div>
@@ -627,8 +627,8 @@ $this->title = 'Личный кабинет';
                 </a>
             </div>
         </div>
-    </div>
-    <div class="row prfl-row">
+    </div>-->
+    <!--<div class="row prfl-row">
         <div class="prfl-row-title">
             <h2>Рекомендуемые товары</h2>
         </div>
@@ -695,7 +695,7 @@ $this->title = 'Личный кабинет';
                 <a href="#" class="button bio-slick-list-button  js-destroy-slick">Смотреть все</a>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
 
 <!-- форма редактирования профиля - начало -->

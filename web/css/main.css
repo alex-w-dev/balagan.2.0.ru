@@ -747,7 +747,8 @@ a.bio-slick-list-item:hover .bio-slick-list-item_title {
     color: #000000;
 }
 
-.footer .footer-col .nav li a:hover {
+.footer .footer-col .nav li a:hover,
+.footer .footer-col .nav li a:focus {
     color: #808080;
     background: none;
 }

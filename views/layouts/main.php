@@ -104,13 +104,15 @@ $left_menu = Nav::widget([
         </div>
         <div class="row top-user-bar  mobile-hide">
             <div class="col-sm-4 mobile-logo-bar ">
-                <img src="/img/logo.png" class="top-user-bar-logo">
+                <a href="http://biogenom.ru">
+                    <img src="/img/logo.png" class="top-user-bar-logo">
+                </a>
             </div>
             <div class="col-sm-8  text-right">
                 <table class="top-account-widget">
                     <tr>
                         <td>
-                            <div class="relative">
+                            <!--<div class="relative">
                                 <div class="top-bell dropdown-toggle" data-toggle="dropdown" submenu="#submenu-bell">
                                     <div class="top-bell-count">1</div>
                                 </div>
@@ -135,15 +137,15 @@ $left_menu = Nav::widget([
                                         </a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div>-->
                         </td>
                         <td class="">
                             <div class="top-account-widget-name-item">
                                 Маргарита
                             </div>
-                            <div class="top-account-widget-name-item">
+                            <!--<div class="top-account-widget-name-item">
                                 У вас 90 бонусов
-                            </div>
+                            </div>-->
                         </td>
                         <td class="">
                             <div class="relative">
@@ -184,10 +186,10 @@ $left_menu = Nav::widget([
             <?=$left_menu?>
         </div>
         <div class="left-social">
-            <a href="#">
+            <a href="https://vk.com/biogenom">
                 <img src="/img/vk.png" alt="">
             </a>
-            <a href="#">
+            <a href="https://www.facebook.com/biogenom">
                 <img src="/img/fb.png" alt="">
             </a>
         </div>
@@ -200,7 +202,7 @@ $left_menu = Nav::widget([
         <img src="/img/logo-mobile.png" class="top-user-bar-logo mobile-show">
     </div>
     <div class="text-right">
-        <div class="relative">
+        <!--<div class="relative">
             <div class="top-bell dropdown-toggle" data-toggle="dropdown" submenu="#submenu-bell">
                 <div class="top-bell-count">1</div>
             </div>
@@ -225,7 +227,7 @@ $left_menu = Nav::widget([
                     </a>
                 </li>
             </ul>
-        </div>
+        </div>-->
     </div>
 </div>
 <div class="js-mobile-menu all-hide">
@@ -257,16 +259,16 @@ $left_menu = Nav::widget([
                 <div class="top-account-widget-name-item">
                     Маргарита
                 </div>
-                <div class="top-account-widget-name-item">
+                <!--<div class="top-account-widget-name-item">
                     У вас 90 бонусов
-                </div>
+                </div>-->
             </div>
         </div>
 
         <div class="left-nav-bar fixed-mobile-menu__item">
             <?=$left_menu?>
         </div>
-        <div class="mobile-uvedomleniya-left fixed-mobile-menu__item">
+        <!--<div class="mobile-uvedomleniya-left fixed-mobile-menu__item">
             <ul>
                 <li><a href="#">
                         <div>Готовы анализы крови</div>
@@ -287,7 +289,7 @@ $left_menu = Nav::widget([
             <div class="mobile-uvedomleniya-show-more">
                 <div class="button js-toggle" data-selector=".mobile-uvedomleniya-left ul .mobile-hide" >Все уведомления</div>
             </div>
-        </div>
+        </div>-->
         <div class="left-mobile-menu-footer fixed-mobile-menu__item">
             <?=$top_menu?>
         </div>
