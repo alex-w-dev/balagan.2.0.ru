@@ -16,6 +16,7 @@ class BlackResult extends Model
 {
     public static function getCurlAddress()
     {
+        // return "http://fcrisk.ru:30851/index.php";
         return "http://fcrisk.ru:30851/RemoteServer.php";
     }
 
@@ -65,6 +66,9 @@ class BlackResult extends Model
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
 
+        /*curl_exec($curl);
+        debug(curl_getinfo($curl));*/
+
         return curl_exec($curl);
     }
 
@@ -92,36 +96,36 @@ class BlackResult extends Model
             'P' => [
                 'title'=>'Вероятность',
                 'children' => [
-                    "P" => 'Вероятность',
-                    'P_fon' => 'Вероятность фоновая',
+                    "P" => $riskFieldNames['P'],
+                    'P_fon' => $riskFieldNames['P_fon'],
                 ]
             ],
             'G' => [
                 'title'=>'Тяжесть',
                 'children' => [
-                    "G" => 'Тяжесть',
+                    "G" => $riskFieldNames['G'],
                 ]
             ],
             'R' => [
                 'title'=>'Риск',
                 'children' => [
-                    "R" => 'Риск',
-                    "R_action" => 'Риск с учетом меропиятий',
-                    "R_fon" => 'Риск фоновый',
+                    "R" => $riskFieldNames['R'],
+                    "R_action" => $riskFieldNames['R_action'],
+                    "R_fon" => $riskFieldNames['R_fon'],
                 ]
             ],
             'R_add' => [
                 'title'=>'Дополнительный риск',
                 'children' => [
-                    "R_add" => 'Дополнительный риск',
-                    "R_add_action" => 'Дополнительный риск с учетом меропиятий',
+                    "R_add" => $riskFieldNames['R_add'],
+                    "R_add_action" => $riskFieldNames['R_add_action'],
                 ]
             ],
             'R_index' => [
                 'title'=>'Приведенный индекс',
                 'children' => [
-                    "R_index" => 'Приведенный индекс риска',
-                    "R_index_action" => 'Приведенный индекс риска с учетом меропиятий',
+                    "R_index" => $riskFieldNames['R_index'],
+                    "R_index_action" => $riskFieldNames['R_index_action'],
                 ]
             ]
         ];
