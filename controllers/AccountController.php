@@ -286,7 +286,7 @@ class AccountController extends Controller
 
             $allUM = BioUserMeasure::findAll(['user_id' => Yii::$app->user->getId()]);
 
-            if ($_GET['debug'] && $_GET['debug'] == 'toServer') {
+            if (isset($_GET['debug']) && $_GET['debug'] == 'toServer') {
                 print_r_pre( BlackResult::getCurlAddress() , 'Server URL');
                 print_r_pre( $allUM, 'Data to server:');
                 die();
@@ -296,7 +296,7 @@ class AccountController extends Controller
 
             $originalBlackJson = BlackResult::curl($data);
 
-            if ($_GET['debug'] && $_GET['debug'] == 'fromServer') {
+            if (isset($_GET['debug']) && $_GET['debug'] == 'fromServer') {
                 print_r_pre( BlackResult::getCurlAddress() , 'Server URL');
                 print_r_pre( $originalBlackJson, 'Data from server:');
                 die();
