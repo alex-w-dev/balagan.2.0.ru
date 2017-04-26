@@ -15,11 +15,11 @@ use yii\bootstrap\NavBar;
 $top_menu = BTopNav::widget([
     'options' => ['class' => 'list-inline top-nav'],
     'items' => [
-        ['label' => 'О компании', 'url' => ['/site/stub?1']],
-        ['label' => 'Новости', 'url' => ['/site/stub']],
+        ['label' => 'О компании', 'url' => ['/site/stub/41']],
+        ['label' => 'Новости', 'url' => ['/site/stub/54']],
         ['label' => 'Медицинская платформа', 'url' => ['/account/index']],
-        ['label' => 'Сервисы', 'url' => ['/site/stub?2']],
-        ['label' => 'Отзывы', 'url' => ['/site/stub?3']],
+        ['label' => 'Сервисы', 'url' => ['/site/stub/42']],
+        ['label' => 'Отзывы', 'url' => ['/site/stub/43']],
         ['label' => 'Контакты', 'url' => ['/site/contact']],
         /*Yii::$app->user->isGuest ? (
         ['label' => 'Login', 'url' => ['/site/login']]
@@ -46,8 +46,8 @@ $left_menu = Nav::widget([
         ['label' => 'Комплексная индивидуальная программа', 'url' => ['/site/stub?7']],
         ['label' => 'История лечения', 'url' => ['/site/stub?8']],
         ['label' => 'Результаты анализов', 'url' => ['/site/stub?9']],
-        ['label' => 'История покупок', 'url' => ['/site/stub?10']],
-        ['label' => 'Возврат 2-НДФЛ', 'url' => ['/site/stub?11']],
+        ['label' => 'История покупок', 'url' => ['/site/stub/410']],
+        ['label' => 'Возврат 2-НДФЛ', 'url' => ['/site/stub/411']],
         ['label' => 'Анкета', 'url' => ['/account/anketa']],
     ],
 ]);
@@ -95,8 +95,8 @@ $left_menu = Nav::widget([
                 <nav>
                     <ul class="list-inline top-nav ">
                         <li>Пермь</li>
-                        <li>+7 (342) 35 90 90</li>
-                        <li>8 800 555 35 90</li>
+                        <li>+7 (342) 200-86-24</li>
+                        <li>8 800 555 96 24</li>
                         <li><a href="#" class="top-nav_callback js-open-popup" data-selector="#callback-popup" >Заказать звонок</a></li>
                     </ul>
                 </nav>
@@ -295,8 +295,8 @@ $left_menu = Nav::widget([
         </div>
         <div class="left-mobile-menu-contacts fixed-mobile-menu__item">
             <div class="left-mobile-menu-contacts__item">Пермь</div>
-            <div class="left-mobile-menu-contacts__item">+7 (342) 35 90 90</div>
-            <div class="left-mobile-menu-contacts__item">8 800 555 35 90</div>
+            <div class="left-mobile-menu-contacts__item">+7 (342) 200-86-24</div>
+            <div class="left-mobile-menu-contacts__item">8 800 555 96 24</div>
             <div class="left-mobile-menu-contacts__item">
                 <div class="button js-open-popup" data-selector="#callback-popup" >Заказать звонок</div>
             </div>
@@ -346,7 +346,7 @@ $left_menu = Nav::widget([
                             <div class="footer-contacts">
                                 <div class="footer-contacts-item">Пермь, Горького, 60</div>
                                 <div class="footer-contacts-item">Biogenom@biogenom</div>
-                                <div class="footer-contacts-item">8 800 555 35 90</div>
+                                <div class="footer-contacts-item">8 800 555 96 24</div>
                             </div>
                         </li>
                     </ul>

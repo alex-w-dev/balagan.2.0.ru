@@ -93,8 +93,8 @@ $top_menu_reg = BTopNav::widget([
         </div>
         <div class="left-mobile-menu-contacts fixed-mobile-menu__item">
             <div class="left-mobile-menu-contacts__item">Пермь</div>
-            <div class="left-mobile-menu-contacts__item">+7 (342) 35 90 90</div>
-            <div class="left-mobile-menu-contacts__item">8 800 555 35 90</div>
+            <div class="left-mobile-menu-contacts__item">+7 (342) 200-86-24</div>
+            <div class="left-mobile-menu-contacts__item">8 800 555 96 24</div>
             <div class="left-mobile-menu-contacts__item">
                 <div class="button js-open-popup" data-selector="#callback-popup" >Заказать звонок</div>
             </div>
