@@ -15,11 +15,11 @@ use yii\bootstrap\NavBar;
 $top_menu = BTopNav::widget([
     'options' => ['class' => 'list-inline top-nav'],
     'items' => [
+        ['label' => 'Медплатформа', 'url' => ['/account']],
+        ['label' => 'Маркет', 'url' => ['/site/stub/3']],
+        ['label' => 'Запись к врачу', 'url' => ['/account']],
+        ['label' => 'Новости', 'url' => ['/account']],
         ['label' => 'О компании', 'url' => 'https://biogenom.ru/o-nas/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8/'],
-        ['label' => 'Новости', 'url' => 'http://biogenom.ru/news/'],
-        ['label' => 'Медицинская платформа', 'url' => ['/account/index']],
-        ['label' => 'Сервисы', 'url' => ['/site/stub/42']],
-        ['label' => 'Отзывы', 'url' => ['/site/stub/43']],
         ['label' => 'Контакты', 'url' => 'https://biogenom.ru/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B/'],
         /*Yii::$app->user->isGuest ? (
         ['label' => 'Login', 'url' => ['/site/login']]
@@ -317,35 +317,41 @@ $left_menu = Nav::widget([
 
             <div class="footer">
                 <div class="footer-col  mobile-hide">
+                    <div class="col-title">
+                        <strong>О нас</strong>
+                    </div>
                     <ul class="nav">
-                        <li><a href="#">О нас</a></li>
-                        <li><a href="https://biogenom.ru/o-nas/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8/">О компании</a></li>
-                        <li><a href="#">Миссия и цели</a></li>
-                        <li><a href="#">Команда</a></li>
-                        <li><a href="#">Корпоративная культура</a></li>
+                        <li><?=Html::a("Корпоративная культура", 'https://biogenom.ru/o-nas/%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%B0%D1%8F-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%B0/') ?></li>
+                        <li><?=Html::a("Команда", 'https://biogenom.ru/o-nas/%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%B0/')?></li>
+                        <li><?=Html::a("Миссия и цели", 'https://biogenom.ru/o-nas/%D0%BC%D0%B8%D1%81%D1%81%D0%B8%D1%8F-%D0%B8-%D1%86%D0%B5%D0%BB%D0%B8/')?></li>
+                        <li><?=Html::a("О компании", 'https://biogenom.ru/o-nas/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8/')?></li>
+                    </ul>
+                </div>
+                <div class="footer-col mobile-hide">
+                    <div class="col-title">
+                        <strong>Сотрудничество</strong>
+                    </div>
+                    <ul class="nav">
+                        <li><?=Html::a("Отзывы клиентов", 'https://biogenom.ru/sotrudnichestvo/%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B-%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%BE%D0%B2/')?></li>
+                        <li><?=Html::a("Партнерство", 'https://biogenom.ru/sotrudnichestvo/%D0%BF%D0%B0%D1%80%D1%82%D0%BD%D0%B5%D1%80%D1%81%D1%82%D0%B2%D0%BE/')?></li>
+                    </ul>
+                </div>
+                <div class="footer-col mobile-hide">
+                    <div class="col-title">
+                        <strong>Документы</strong>
+                    </div>
+                    <ul class="nav">
+                        <li><?=Html::a("Правила оказания услуг", 'https://biogenom.ru/documents/%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D0%BE%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D0%B8%D1%8F-%D1%83%D1%81%D0%BB%D1%83%D0%B3/')?></li>
                     </ul>
                 </div>
                 <div class="footer-col mobile-hide">
                     <ul class="nav">
-                        <li><a href="#">Сотрудничество</a></li>
-                        <li><a href="#">Партнерство</a></li>
-                        <li><a href="#">Отзывы клиентов</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col mobile-hide">
-                    <ul class="nav">
-                        <li><a href="#">Документы</a></li>
-                        <li><a href="#">Правила оказания услуг</a></li>
-                        <li><a href="#">Лицензии</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col mobile-hide">
-                    <ul class="nav">
-                        <li><a href="https://biogenom.ru/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B/">Контакты</a></li>
+                        <li><?=Html::a("Контакты", 'https://biogenom.ru/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B/')?></li>
                         <li>
                             <div class="footer-contacts">
                                 <div class="footer-contacts-item">Пермь, Горького, 60</div>
-                                <div class="footer-contacts-item">Biogenom@biogenom</div>
+                                <div class="footer-contacts-item">info@biogenom.ru</div>
+                                <div class="footer-contacts-item">8 342 200 86 24</div>
                                 <div class="footer-contacts-item">8 800 555 96 24</div>
                             </div>
                         </li>

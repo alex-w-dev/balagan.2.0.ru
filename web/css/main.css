@@ -740,6 +740,12 @@ a.bio-slick-list-item:hover .bio-slick-list-item_title {
     color: #000000;
 }
 
+.footer .footer-col .col-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+
 .footer .footer-col .nav li a {
     padding: 5px 30px 5px 0px;
     font-family: Ubuntu Light;
