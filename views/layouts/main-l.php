@@ -19,8 +19,8 @@ $top_menu = BTopNav::widget([
         ['label' => 'Медплатформа', 'url' => ['/account']],
         ['label' => 'Маркет', 'url' => ['/site/stub/3']],
         ['label' => 'Онлайн запись', 'url' => ['/account']],
-        ['label' => 'О компании', 'url' => ['/site/stub/2']],
-        ['label' => 'Контакты', 'url' => ['/site/stub/1']],
+        ['label' => 'О компании', 'url' => 'https://biogenom.ru/o-nas/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8/'],
+        ['label' => 'Контакты', 'url' => 'https://biogenom.ru/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B/'],
     ],
     'encodeLabels' => false,
 ]);
