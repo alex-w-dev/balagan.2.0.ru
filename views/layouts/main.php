@@ -15,7 +15,7 @@ use yii\bootstrap\NavBar;
 $top_menu = BTopNav::widget([
     'options' => ['class' => 'list-inline top-nav'],
     'items' => [
-        ['label' => 'Медплатформа', 'url' => ['/account']],
+        ['label' => 'Медплатформа', 'url' => 'http://biogenom.ru/%d0%be-%d0%bf%d1%80%d0%be%d0%b3%d1%80%d0%b0%d0%bc%d0%bc%d0%b5/'],
 //        ['label' => 'Маркет', 'url' => ['/site/stub/3']],
 //        ['label' => 'Запись к врачу', 'url' => ['/account']],
         ['label' => 'Новости', 'url' => 'http://biogenom.ru/news/'],
