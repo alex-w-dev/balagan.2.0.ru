@@ -16,11 +16,11 @@ $top_menu = BTopNav::widget([
     'options' => ['class' => 'list-inline top-nav'],
     'items' => [
         ['label' => 'Медплатформа', 'url' => ['/account']],
-        ['label' => 'Маркет', 'url' => ['/site/stub/3']],
-        ['label' => 'Запись к врачу', 'url' => ['/account']],
-        ['label' => 'Новости', 'url' => ['/account']],
-        ['label' => 'О компании', 'url' => 'https://biogenom.ru/o-nas/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8/'],
-        ['label' => 'Контакты', 'url' => 'https://biogenom.ru/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B/'],
+//        ['label' => 'Маркет', 'url' => ['/site/stub/3']],
+//        ['label' => 'Запись к врачу', 'url' => ['/account']],
+        ['label' => 'Новости', 'url' => 'http://biogenom.ru/news/'],
+        ['label' => 'О компании', 'url' => 'http://biogenom.ru/o-nas/%D0%BE-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8/'],
+        ['label' => 'Контакты', 'url' => 'http://biogenom.ru/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B/'],
         /*Yii::$app->user->isGuest ? (
         ['label' => 'Login', 'url' => ['/site/login']]
         ) : (
