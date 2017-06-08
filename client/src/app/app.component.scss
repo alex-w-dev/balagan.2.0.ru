@@ -41,7 +41,6 @@ time, mark, audio, video {
   margin-top: 0;
 }
 
-
 /* for empty flex-item  */
 .anketa-group-list-item:empty{
   height: 0;
@@ -175,7 +174,7 @@ h2{
 
 }
 .site-error__building{
-  background: white url('../public/img/mekhanizm.png') no-repeat 65% 82%;
+  background: white url('/public/img/mekhanizm.png') no-repeat 65% 82%;
   min-height: 530px;
 }
 
