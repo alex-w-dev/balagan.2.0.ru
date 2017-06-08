@@ -1,0 +1,36 @@
+@import '../app.style.constants';
+
+:host{
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  .member-area_header{
+    height: $member-area_header---height;
+    width: 100%;
+  }
+  .member-area_body{
+    height: calc(100% - #{$member-area_header---height});
+    width: 100%;
+
+    .member-area_left-nav {
+      width: $member-area_left-nav---width;
+      max-width: $member-area_left-nav---max-with;
+      overflow-y: auto;
+    }
+    .member-area_center {
+      width: calc(100% - #{$member-area_left-nav---width});
+      max-width: calc(100% - #{$member-area_left-nav---max-with});
+      overflow-y: auto;
+
+      .member-area_content {}
+      .member-area_footer {}
+    }
+  }
+
+}

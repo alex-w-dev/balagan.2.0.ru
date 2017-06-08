@@ -1,0 +1,15 @@
+:host{
+  .top-nav{
+    display: flex;
+  }
+  .top-user-bar,
+  .top-nav-bar{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .top-nav-account{
+    display: flex;
+    align-items: center;
+  }
+}

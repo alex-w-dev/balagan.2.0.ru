@@ -5,8 +5,8 @@ import {HeaderModule} from "../header/header.module";
 import {LeftNavModule} from "../left-nav/left-nav.module";
 import {ContentModule} from "../content/content.module";
 import {FooterModule} from "../footer/footer.module";
+import {MaterializeModule} from "../materializecss/materizalizecss.module";
 
-import {MaterializeModule} from "angular2-materialize";
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import {MaterializeModule} from "angular2-materialize";
     LeftNavModule,
     ContentModule,
     FooterModule,
-    MaterializeModule,
+    MaterializeModule
   ],
   exports: [
     MemberAreaComponent,

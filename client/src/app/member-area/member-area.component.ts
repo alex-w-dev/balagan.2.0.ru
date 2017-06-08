@@ -13,5 +13,4 @@ export class MemberAreaComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }
