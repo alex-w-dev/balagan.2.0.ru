@@ -1,6 +1,5 @@
 <?php
-namespace app\controllers;
-use yii\rest\ActiveController;
+namespace app\modules\api\controllers;
 use yii\web\Controller;
 
 class _ApiController extends Controller
@@ -20,34 +19,14 @@ class _ApiController extends Controller
         ];
         $behaviors['access'] = [
             'class' => \yii\filters\AccessControl::className(),
-            'only' => ['create', 'update', 'delete'],
             'rules' => [
                 [
-                    'actions' => ['create', 'update', 'delete'],
-                    'allow' => false,
+                    'allow' => true,
                     'roles' => ['@'],
                 ],
             ],
         ];
         // here’s where I add behavior (read below)
         return $behaviors;
-    }
-
-    public function actionAccount($action, $model = null, $params = [])
-    {
-        print_r('2123');
-
-    }
-
-    public function actionUser($id = 'dasd')
-    {
-        return $id;
-
-    }
-
-    public function actionUpdate($action, $model = null, $params = [])
-    {
-        print_r('2123');
-
     }
 }

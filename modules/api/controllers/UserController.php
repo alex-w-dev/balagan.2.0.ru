@@ -1,7 +1,5 @@
 <?php
-namespace app\controllers;
-use yii\rest\ActiveController;
-use yii\web\Controller;
+namespace app\modules\api\controllers;
 
 class UserController extends _ApiController
 {
@@ -12,7 +10,7 @@ class UserController extends _ApiController
         return $behaviors;
     }
 
-    public function actionAccount($action, $model = null, $params = [])
+    public function actionAccount()
     {
         print_r('2123');
 

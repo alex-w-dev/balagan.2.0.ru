@@ -7,6 +7,11 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'defaultRoute' => 'account/index',
+    'modules' => [
+        'api' => [
+            'class' => 'app\modules\api\ApiModule',
+        ],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

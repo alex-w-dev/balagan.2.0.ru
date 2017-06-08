@@ -12,9 +12,9 @@ RewriteEngine on
 #RewriteRule ^fonts/(.*)$ web/fonts/$1 [L]
 #RewriteRule (.*) web/$1
 
-RewriteCond %{REQUEST_URI} ^/account [OR]
-RewriteCond %{REQUEST_URI} ^/black [OR]
-RewriteCond %{REQUEST_URI} ^/api
+RewriteCond %{REQUEST_URI} ^/account [OR] # TODO: should delete after SPA refactor
+RewriteCond %{REQUEST_URI} ^/black [OR] # black box api
+RewriteCond %{REQUEST_URI} ^/api # SPA (client) api
 RewriteCond %{REQUEST_FILENAME} !favicon.ico
 RewriteCond %{REQUEST_FILENAME} !robots.txt
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -22,8 +22,16 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . web/index.php
 
 
-# frontend
-RewriteCond %{REQUEST_URI} (.html|.js|.css|.jpg|.jpeg)
+# common (images)
+RewriteCond %{REQUEST_URI} (.jpg|.jpeg)
+RewriteCond %{REQUEST_FILENAME} !favicon.ico
+RewriteCond %{REQUEST_FILENAME} !robots.txt
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) img/$1 [L]
+
+#frontend
+RewriteCond %{REQUEST_URI} (.html|.js|.css)
 RewriteCond %{REQUEST_FILENAME} !favicon.ico
 RewriteCond %{REQUEST_FILENAME} !robots.txt
 RewriteCond %{REQUEST_FILENAME} !-f
