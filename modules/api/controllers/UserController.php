@@ -1,6 +1,9 @@
 <?php
 namespace app\modules\api\controllers;
 
+use app\models\db\BioUser;
+use Yii;
+
 class UserController extends _ApiController
 {
 
@@ -8,6 +11,13 @@ class UserController extends _ApiController
     {
         $behaviors = parent::behaviors();
         return $behaviors;
+    }
+
+    public function actionIndex($access_token)
+    {
+        $user = BioUser::findByAccessToken($access_token);
+        return $user;
+
     }
 
     public function actionAccount()

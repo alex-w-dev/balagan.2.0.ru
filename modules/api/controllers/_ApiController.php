@@ -17,15 +17,15 @@ class _ApiController extends Controller
                 'application/json' => \yii\web\Response::FORMAT_JSON,
             ],
         ];
-        $behaviors['access'] = [
-            'class' => \yii\filters\AccessControl::className(),
-            'rules' => [
-                [
-                    'allow' => true,
-                    'roles' => ['@'],
-                ],
-            ],
-        ];
+//        $behaviors['access'] = [
+//            'class' => \yii\filters\AccessControl::className(),
+//            'rules' => [
+//                [
+//                    'allow' => true,
+//                    'roles' => ['@'],
+//                ],
+//            ],
+//        ];
         // here’s where I add behavior (read below)
         return $behaviors;
     }

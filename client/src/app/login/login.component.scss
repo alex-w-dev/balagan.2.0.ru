@@ -1,0 +1,57 @@
+
+.site-login{
+  text-align: center;
+}
+.top-user-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+h1{
+  font-family : 'Ubuntu', serif;
+  font-weight : bold;
+  font-size : 40px;
+  text-transform : uppercase;
+  color : #80C2CB;
+  margin-bottom: 22px;
+}
+.site-login a{
+  font-family : 'Ubuntu', serif;
+  font-weight: 300;
+  font-size : 16px;
+  color : #80C2CB;
+  margin-bottom: 30px;
+  text-decoration: none;
+  display: block;
+}
+.site-login a>span{
+  border-bottom: 1px dashed;
+}
+
+.middle{
+  background-color: #fff;
+}
+.site-log-in-out-form{
+  max-width: 280px;
+  margin: 0 auto;
+}
+.registration-label{
+  margin-bottom: 10px;
+  font-family : 'Ubuntu', serif;
+  font-weight: 300;
+  font-size : 16px;
+  color : #808080;
+}
+.registration-radio-list{
+
+  text-align: left;
+}
+.registration-radio-list .radio{
+
+  display: inline-block;
+
+  margin-right: 20px;
+}
+.help-block-error{
+  text-align: left;
+}

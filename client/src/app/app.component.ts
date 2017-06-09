@@ -6,6 +6,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrls: [
     'app.component.scss',
     '../../node_modules/ubuntu-fontface/_ubuntu-base.scss',
+    './materilize.rem.scss',
   ],
   encapsulation: ViewEncapsulation.None
 

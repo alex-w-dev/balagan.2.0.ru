@@ -37,6 +37,10 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         return self::find()->where(['id'=>$user_id])->one();
     }
 
+    public static function findByAccessToken($user_id){
+        return self::find()->where(['id'=>$user_id])->one();
+    }
+
     /* path to images of profile MAIN_DIRECTORY */
     public static function getMainDirectoryPath($path_key){
         /* this finction can't to be changed!!!! */
