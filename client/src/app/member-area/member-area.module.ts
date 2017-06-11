@@ -15,6 +15,8 @@ import {AccountComponent} from "../account/account.component";
 import {PageNotFoundComponent} from "../page-not-found/page-not-found.component";
 import {LoginComponent} from "../login/login.component";
 import {HeaderUnloginedModule} from "../header-unlogined/header-unlogined.module";
+import {RegistrationComponent} from "../registration/registration.component";
+import {RegistrationModule} from "../registration/registration.module";
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,6 +24,11 @@ const appRoutes: Routes = [
     path: 'account',
     component: AccountComponent,
     data: { title: 'Личный кабинет' }
+  },
+  {
+    path: 'registration',
+    component: RegistrationComponent,
+    data: { title: 'Регистрация' }
   },
   { path: '',
     redirectTo: '/account',
@@ -40,6 +47,7 @@ const appRoutes: Routes = [
     FooterModule,
     MaterializeModule,
     HttpModule,
+    RegistrationModule,
     RouterModule.forRoot(appRoutes)
   ],
   exports: [

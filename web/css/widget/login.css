@@ -44,7 +44,7 @@ a.widget-login,
 }
 a.widget-login:hover,
 a.widget-login:focus,
-.log-in-out-item .active>a,
+.log-in-out-item a.active,
 .log-in-out-item a:hover,
 .log-in-out-item a:focus {
     text-decoration: none;

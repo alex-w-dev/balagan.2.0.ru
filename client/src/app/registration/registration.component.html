@@ -1,0 +1,146 @@
+<div class="site-login">
+  <h1>Регистрация</h1>
+  <a [routerLink]="['/registration']">
+        <span>
+            Уже зарегистрированы?
+        </span>
+  </a>
+
+  <!-- -->
+  <form class="site-log-in-out-form"
+        #registrationForm="ngForm"
+        (ngSubmit)="onSubmit()">
+    <div class="form-group field-registrationform-username required">
+      <input type="text"
+             class="form-control"
+             required
+             minlength="4"
+             placeholder="ФИО"
+             [(ngModel)]="patient.fio"
+             [ngModelOptions]="{standalone: true}">
+      <div class=""><p class="help-block help-block-error"></p></div>
+    </div>
+    <div class="text-left registration-label">
+      Дата рождения
+    </div>
+    <div class="edit-prfl-date">
+      <div class="edit-prfl-date__day edit-prfl-date__item">
+        <div class="form-group field-registrationform-birthday">
+          <select id="registrationform-birthday"
+                  class="form-control"
+                  [(ngModel)]="patient.birthDay"
+                  [ngModelOptions]="{standalone: true}">
+            <option value="0">День</option>
+            <option *ngFor="let birthDay of birthDays" [value]="birthDay">{{birthDay}}</option>
+          </select>
+          <div class=""><p class="help-block help-block-error"></p></div>
+        </div>
+      </div>
+      <div class="edit-prfl-date__month edit-prfl-date__item">
+        <div class="form-group field-registrationform-birthmonth">
+          <select id="registrationform-birthmonth"
+                  class="form-control"
+                  [(ngModel)]="patient.birthMonth"
+                  [ngModelOptions]="{standalone: true}">
+            <option value="0">Месяц</option>
+            <option *ngFor="let birthMonth of birthMonths" [value]="birthMonth">{{birthMonth}}</option>
+          </select>
+          <div class=""><p class="help-block help-block-error"></p></div>
+        </div>
+      </div>
+      <div class="edit-prfl-date__year edit-prfl-date__item">
+        <div class="form-group field-registrationform-birthyear">
+          <select id="registrationform-birthyear"
+                  class="form-control"
+                  [(ngModel)]="patient.birthYear"
+                  [ngModelOptions]="{standalone: true}">
+            <option value="0">Год</option>
+            <option *ngFor="let birthYear of birthYears" [value]="birthYear">{{birthYear}}</option>
+          </select>
+          <div class=""><p class="help-block help-block-error"></p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-left registration-label">
+      Пол
+    </div>
+    <div class="form-group field-registrationform-male required">
+      <div class="registration-radio-list"><input type="hidden" name="RegistrationForm[male]" value="">
+        <div id="registrationform-male" aria-required="true">
+          <div class="radio">
+            <label>
+              <input type="radio"
+                     [(ngModel)]="patient.male"
+                     [ngModelOptions]="{standalone: true}"
+                     value="0">
+              Женский
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio"
+                     [(ngModel)]="patient.male"
+                     [ngModelOptions]="{standalone: true}"
+                     value="1">
+              Мужской
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class=""><p class="help-block help-block-error"></p></div>
+    </div>
+    <div class="form-group field-registrationform-district_name">
+      <select class="form-control"
+              [(ngModel)]="patient.district_name"
+              [ngModelOptions]="{standalone: true}">
+        <option value="0">Регоин проживания</option>
+        <option *ngFor="let districtName of districtNames" [value]="districtName">{{districtName}}</option>
+      </select>
+      <div class=""><p class="help-block help-block-error"></p></div>
+    </div>
+    <div class="form-group field-registrationform-email required">
+      <input type="text"
+             class="form-control"
+             placeholder="Email"
+             required
+             [(ngModel)]="patient.email"
+             [ngModelOptions]="{standalone: true}">
+      <div class=""><p class="help-block help-block-error"></p></div>
+    </div>
+    <div class="form-group field-registrationform-phone required">
+      <input type="text"
+             class="form-control"
+             placeholder="Ваш телефон"
+             required
+             [(ngModel)]="patient.phone"
+             [ngModelOptions]="{standalone: true}">
+      <div class=""><p class="help-block help-block-error"></p></div>
+    </div>
+    <div class="form-group field-registrationform-promo">
+      <input type="text"
+             class="form-control"
+             placeholder="Промокод"
+             [(ngModel)]="patient.promoCode"
+             [ngModelOptions]="{standalone: true}">
+      <div class=""><p class="help-block help-block-error"></p></div>
+    </div>
+    <div class="form-group field-registrationform-password required relative">
+      <input type="password"
+             class="form-control js-password"
+             placeholder="Пароль"
+             required
+             [(ngModel)]="patient.password"
+             [ngModelOptions]="{standalone: true}">
+      <div class=""><p class="help-block help-block-error"></p></div>
+      <div class="js-password-icon"></div>
+    </div>
+    <div class="form-group text-center">
+      <button type="submit"
+              class="button"
+              name="login-button"
+              [disabled]="!registrationForm.form.valid">Присоединиться</button>
+    </div>
+
+  </form>
+</div>

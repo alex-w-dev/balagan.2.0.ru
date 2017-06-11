@@ -4,9 +4,9 @@ import {Component, ViewEncapsulation} from '@angular/core';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: [
-    'app.component.scss',
-    '../../node_modules/ubuntu-fontface/_ubuntu-base.scss',
     './materilize.rem.scss',
+    '../../node_modules/ubuntu-fontface/_ubuntu-base.scss',
+    'app.component.scss',
   ],
   encapsulation: ViewEncapsulation.None
 

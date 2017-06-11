@@ -6,6 +6,7 @@ import { MemberAreaModule } from "./member-area/member-area.module";
 import { AccountComponent } from './account/account.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { LoginComponent } from './login/login.component';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -17,6 +18,12 @@ import { LoginComponent } from './login/login.component';
   imports: [
     BrowserModule,
     MemberAreaModule,
+    RouterModule
+  ],
+  exports: [
+    BrowserModule,
+    MemberAreaModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
