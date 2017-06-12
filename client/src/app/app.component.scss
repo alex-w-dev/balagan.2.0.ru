@@ -88,10 +88,10 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
 html {
   font-family: 'Ubuntu', serif;
   font-weight: 300;
-  font-size : 1px;
+  font-size : 16px;
 }
 body {
-  font-size: 16rem;
+  font-size: 1rem;
 }
 
 .relative {
@@ -131,7 +131,6 @@ a:focus {
   margin-bottom:15px;
   input {
     padding-left: 15px;
-    width: calc(100% - 15px);
     height: 40px;
   }
 
@@ -232,6 +231,21 @@ h2{
 .button:focus {
   color: #fff;
 }
+
+.button:disabled {
+  background: #9c9c9c;
+}
+
+//.form-control.ng-invalid{
+//  border-color: red;
+//
+//  + div > .help-block-error {
+//    display: block;
+//  }
+//  + * {
+//    color: red;;
+//  }
+//}
 
 .gray-4 {
   color: #808080;
@@ -1430,7 +1444,7 @@ p.select-plot-p{
 
 .form-control{
   width: 100%;
-  padding-left: 15rem;
+  padding-left: .9rem;
 }
 
 .site-login{
