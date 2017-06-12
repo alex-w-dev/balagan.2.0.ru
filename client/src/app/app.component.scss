@@ -224,12 +224,10 @@ h2{
   background: #249FA2;
 }
 
-.button:visited {
-  color: #fff;
-}
-
+.button:visited,
 .button:focus {
   color: #fff;
+  outline: none;
 }
 
 .button:disabled {

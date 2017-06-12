@@ -1,5 +1,5 @@
 export class Patient {
-  fio: string = '';
+  username: string = '';
   email: string = '';
   phone: string = '';
   birthDay: number = 1;

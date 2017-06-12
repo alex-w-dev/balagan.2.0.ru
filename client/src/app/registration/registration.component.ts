@@ -1,11 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, NgForm} from "@angular/forms";
 import {composeAsyncValidators} from "@angular/forms/src/directives/shared";
 import {Patient} from "../shared/classes/pacient";
+import {ApiService} from "../shared/services/api.service";
+import {ISelectInputOption} from "../shared/components/form/select-input/select-input.component";
 
 class RegistrationPatient extends Patient {
     password: string;
-    promoCode: string;
+    promo: string;
 
     constructor(data) {
         super(data);
@@ -17,12 +19,13 @@ class RegistrationPatient extends Patient {
     templateUrl: './registration.component.html',
     styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnChanges {
+
     districts = ['Really Smart', 'Super Flexible', 'Weather Changer'];
-    birthDays: number[];
-    birthMonths: string[];
-    birthYears: number[];
-    districtNames: string[];
+    birthDays: ISelectInputOption[];
+    birthMonths: ISelectInputOption[];
+    birthYears: ISelectInputOption[];
+    districtNames: ISelectInputOption[];
 
     firstFormChecked: boolean = false;
 
@@ -32,81 +35,70 @@ export class RegistrationComponent implements OnInit {
 
     active = true;
 
-    /* example : {fio: 'Fio is required'} */
+    /* example : {username: 'Fio is required'} */
     formErrors = {};
-
-    validationMessages = {
-        'fio': {
-            'required': 'Fio is required.',
-            'minlength': 'Fio must be at least 4 characters long.',
-            'maxlength': 'Fio cannot be more than 24 characters long.',
-        },
-        'email': {
-            'required': 'E-Mail is required.'
-        },
-        'phone': {
-            'required': 'phone is required.'
-        },
-        'birthDay': {
-            'required': 'birthDay is required.'
-        },
-        'birthMonth': {
-            'required': 'birthMonth is required.'
-        },
-        'birthYear': {
-            'required': 'birthYear is required.'
-        },
-        'male': {
-            'required': 'male is required.'
-        },
-        'district_name': {
-            'required': 'district_name is required.'
-        },
-        'password': {
-            'required': 'password is required.'
-        }
-    };
 
     registrationForm: NgForm;
     @ViewChild('registrationForm') currentForm: NgForm;
 
-    constructor() {
+    constructor(private api: ApiService) {
         this.birthDays = [];
+        this.birthDays.push({
+            value: '0',
+            text: 'День',
+        });
         for (let i = 1; i <= 31; i++) {
-            this.birthDays.push(i);
+            this.birthDays.push({
+                value: i.toString(),
+                text: i.toString(),
+            });
         }
         this.birthYears = [];
+        this.birthDays.push({
+            value: '0',
+            text: 'Год',
+        });
         for (let i = 1910; i <= 2017; i++) {
-            this.birthYears.push(i);
+            this.birthYears.push({
+                value: i.toString(),
+                text: i.toString(),
+            });
         }
         this.birthMonths = [
-            'Январь',
-            'Февраль',
-            'Март',
-            'Апрель',
-            'Май',
-            'Июнь',
-            'Июль',
-            'Август',
-            'Сентябрь',
-            'Октябрь',
-            'Ноябрь',
-            'Декабрь',
+            {value: '0', text: 'Месяц'},
+            {value: 'Январь', text: 'Январь'},
+            {value: 'Февраль', text: 'Февраль'},
+            {value: 'Март', text: 'Март'},
+            {value: 'Апрель', text: 'Апрель'},
+            {value: 'Май', text: 'Май'},
+            {value: 'Июнь', text: 'Июнь'},
+            {value: 'Июль', text: 'Июль'},
+            {value: 'Август', text: 'Август'},
+            {value: 'Сентябрь', text: 'Сентябрь'},
+            {value: 'Октябрь', text: 'Октябрь'},
+            {value: 'Ноябрь', text: 'Ноябрь'},
+            {value: 'Декабрь', text: 'Декабрь'},
         ];
         this.districtNames = [
-            'Российская Федерация',
-            'Алтайский край',
-            'Алейский район',
+            {value: '0', text: 'Регоин проживания'},
+            {value: 'Российская Федерация', text: 'Российская Федерация'},
+            {value: 'Алтайский край', text: 'Алтайский край'},
+            {value: 'Алейский район', text: 'Алейский район'},
         ]
     }
 
 
     onSubmit() {
-        this.onValueChanged();
-
+        this.api.request('user/register', {}, this.registrationForm.value, 'post', true)
+            .then(data => {
+                if (data.success) {
+                    console.log(data);
+                } else {
+                    this.formErrors = data.errors;
+                }
+            })
+            .catch(console.error);
         this.submitted = true;
-
-        console.log(this.registrationForm.form.valid);
     }
 
     ngAfterViewChecked() {
@@ -120,26 +112,13 @@ export class RegistrationComponent implements OnInit {
             return;
         }
         this.registrationForm = this.currentForm;
+        this.registrationForm.valueChanges.subscribe(value => {
+            console.log(value);
+        })
     }
 
-    onValueChanged(data?: any) {
-        if (!this.registrationForm) {
-            return;
-        }
-        const form = this.registrationForm.form;
-
-        for (const field in this.validationMessages) {
-            // clear previous error message (if any)
-            this.formErrors[field] = '';
-            const control = form.get(field);
-
-            if (control && !control.valid) {
-                const messages = this.validationMessages[field];
-                for (const key in control.errors) {
-                    this.formErrors[field] += messages[key] + ' ';
-                }
-            }
-        }
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(changes);
     }
 
     ngOnInit() {

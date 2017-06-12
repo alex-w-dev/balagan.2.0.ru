@@ -14,8 +14,8 @@ export class ApiService {
     this.accessToken = localStorage.getItem('accessToken');
   }
 
-  request(route: string, getParams?: any, data: any = {}, type?: 'get'|'post'): Promise<any> {
-    if (! this.accessToken ) {
+  request(route: string, getParams?: any, data: any = {}, type?: 'get'|'post', accessIgnore: boolean = false): Promise<any> {
+    if (! this.accessToken && !accessIgnore ) {
       this.router.navigate(['login']);
       return new Promise ((resolve, reject) => {
         reject('Unloginned');
@@ -29,7 +29,7 @@ export class ApiService {
 
     if (getParams && Object.keys(getParams).length) {
       Object.keys(getParams).forEach(key => {
-        search.set(key, getParams[key]);
+        search.set(key, JSON.stringify(getParams[key]));
       });
     }
 
@@ -41,7 +41,12 @@ export class ApiService {
     let request;
     switch (type) {
       case 'post':
-        request = this.http.post(route, data, options);
+        let postBody = new URLSearchParams();
+        Object.keys(data).forEach(key => {
+          postBody.append(key, JSON.stringify(data[key]));
+        });
+        console.log(postBody.toString());
+        request = this.http.post(route, postBody.toString(), options);
         break;
       default:
         request = this.http.get(route, options);
@@ -51,10 +56,9 @@ export class ApiService {
     return new Promise((resolve, reject) => {
       request
         .subscribe((data) => {
-        console.log(data);
-          resolve(data);
+          resolve(JSON.parse(data._body));
         }, (error) => {
-          console.log(error);
+          console.error(error);
           reject(error);
         })
     });
