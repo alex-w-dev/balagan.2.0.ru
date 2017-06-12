@@ -43,10 +43,10 @@ export class ApiService {
       case 'post':
         let postBody = new URLSearchParams();
         Object.keys(data).forEach(key => {
-          postBody.append(key, JSON.stringify(data[key]));
+          let type = typeof data[key];
+          postBody.append(key, (type === 'string' || type === 'number') ? data[key] : JSON.stringify(data[key]));
         });
-        console.log(postBody.toString());
-        request = this.http.post(route, postBody.toString(), options);
+        request = this.http.post(route, postBody, options);
         break;
       default:
         request = this.http.get(route, options);
