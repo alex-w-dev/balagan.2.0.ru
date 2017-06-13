@@ -76,6 +76,12 @@
       </div>
       <div class="form-control-feedback">{{formErrors.male}}</div>
     </div>
+    <select-input [(ngModel)]="patient.district_name"
+                  [name]="'district_name'"
+                  [options]="districtNames"
+                  [className]="'field-registrationform-district_name'"
+                  [(errorText)]="formErrors.district_name"
+                  ngDefaultControl></select-input>
     <text-input [(ngModel)]="patient.email"
                 [name]="'email'"
                 [(errorText)]="formErrors.email"

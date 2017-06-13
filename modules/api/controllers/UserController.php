@@ -37,7 +37,6 @@ class UserController extends _ApiController
 
         $model = new RegistrationForm();
         $model->setAttributes(Yii::$app->request->post());
-        print_r_pre($model->attributes);
         if ($model->validate()){
             if ($user = $model->register()) {
                 return [
