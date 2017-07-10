@@ -2,7 +2,8 @@
 
 namespace app\modules\api\models\Forms;
 
-use app\models\db\BioUser;
+use app\modules\api\models\db\BioUser;
+use app\models\db\BioUserPacient;
 use Yii;
 use yii\base\Model;
 
@@ -46,7 +47,7 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
+            $user = BioUser::findByUsername($this->username);
 
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Неверное логин или пароль.');
@@ -60,6 +61,7 @@ class LoginForm extends Model
      */
     public function login()
     {
+
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
@@ -73,10 +75,7 @@ class LoginForm extends Model
      */
     public function getUser()
     {
-        if ($this->_user === false) {
-            $this->_user = BioUser::findByUsername($this->username);
-        }
-
-        return $this->_user;
+        $result = BioUser::getUser($this->username);
+        return $result;
     }
 }

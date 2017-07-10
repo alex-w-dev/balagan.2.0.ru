@@ -37,8 +37,8 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         return self::find()->where(['id'=>$user_id])->one();
     }
 
-    public static function findByAccessToken($user_id){
-        return self::find()->where(['id'=>$user_id])->one();
+    public static function findByAccessToken($access_token){
+        return self::find()->where(['access_token'=>$access_token])->one();
     }
 
     /* path to images of profile MAIN_DIRECTORY */
@@ -208,5 +208,21 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     public function validateAuthKey($auth_key)
     {
         return $this->auth_key === $auth_key;
+    }
+
+    public static function getUser($userName)
+    {
+        $user = BioUser::findByUsername($userName);
+        $result['user_info'] = $user->attributes;
+        if ($user->type == 'pacient') {
+            $pacient = BioUserPacient::findByUserId($user->id);
+            $result['pacient_info'] = $pacient->attributes;
+        }
+        if ($user->type == 'doctor') {
+            $pacient = BioUserPacient::findByUserId($user->id);
+            $result['doctor_info'] = $pacient->attributes;
+        }
+
+        return $result;
     }
 }

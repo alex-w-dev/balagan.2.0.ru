@@ -5,6 +5,7 @@ namespace app\modules\api\models\Forms;
 use app\modules\api\models\db\BioDistrict;
 use app\modules\api\models\db\BioUser;
 use app\modules\api\models\db\BioUserPacient;
+use app\modules\api\models\db\BioUserDoctor;
 use Yii;
 use yii\base\Model;
 
@@ -29,7 +30,9 @@ class RegistrationForm extends Model
     public $district_name;
     public $user_id;
     public $polis;
+    public $type;
     public $rememberMe = true;
+    public $license;
 
     private $_user = false;
 
@@ -41,13 +44,11 @@ class RegistrationForm extends Model
     {
         return [
             // username and password are both required ^$
-            [['phone', 'username', 'password', 'email'], 'required', 'message' => 'Поле не должно быть пустым'],
-            /*['birthDay', 'required', 'message' => 'Пожалуйста выберите день.'],
-            ['birthMonth', 'required', 'message' => 'Пожалуйста выберите месяц.'],
-            ['birthYear', 'required', 'message' => 'Пожалуйста выберите год.'],*/
+            [['phone', 'username', 'password', 'email', 'type', 'district_name'], 'required', 'message' => 'Поле не должно быть пустым'],
             ['male', 'required', 'message' => 'Выберите пол.'],
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
+            [['license'], 'string', 'max' => 120],
             ['district_name', 'in', 'range' => $this->getDistricts(), 'message' => 'Пожалуйста выберите регион проживания.'],
             ['birthDay', 'in', 'range' => $this->getBirthDays(), 'message' => 'Пожалуйста выберите день.'],
             ['birthMonth', 'in', 'range' => $this->getBirthMonths(), 'message' => 'Пожалуйста выберите месяц.'],
@@ -88,13 +89,9 @@ class RegistrationForm extends Model
     public function register()
     {
         if ($this->validate()) {
-            /*register*/
             $time = time();
-
-
-            /* обновляем пользователя */
-            if($this->user_id){
-                $user = BioUser::findOne(['id'=>$this->user_id]);
+            if ($this->user_id) {
+                $user = BioUser::findOne(['id' => $this->user_id]);
                 $user->setAttributes([
                     'id' => $this->user_id,
                     'email' => $this->email,
@@ -102,36 +99,33 @@ class RegistrationForm extends Model
                     'phone' => $this->phone,
                     'updated' => $time
                 ]);
-            }else{
-                /* создаем пользователя */
+            } else {
                 $user = new BioUser();
                 $user->setAttributes([
                     'email' => $this->email,
                     'username' => $this->username,
                     'phone' => $this->phone,
                     'passwd' => md5($this->password),
-                    'type' => 'pacient',
+                    'type' => $this->type,
                     'status' => 1,
                     'created' => $time,
                     'updated' => $time,
-                    'auth_key' => uniqid("", rand(1000,9999)),
-                    'access_token' => md5(uniqid(rand(),1)).md5($this->email),
+                    'auth_key' => uniqid("", rand(1000, 9999)),
+                    'access_token' => md5(md5(uniqid(rand(), 1)) . md5($this->email)),
+                    'path_key' => md5($this->email),
                 ]);
             }
-//            var_dump($user->validate());
-//            var_dump($user->errors);
-//            die();
 
-            if($user->validate()){
-                $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . array_search($this->birthMonth ,$this->getNumberToMonth()) . '.' . $this->birthYear;
-                $birthUnix = strtotime($birthString." UTC");
+            if ($user->validate()) {
 
-                $result = BioDistrict::find()->where(['dist_name'=>$this->district_name])->asArray()->one();
-                $districtCode = $result['dist_code'];
+                $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . array_search($this->birthMonth,
+                        $this->getNumberToMonth()) . '.' . $this->birthYear;
+                $birthUnix = strtotime($birthString . " UTC");
+                $result = BioDistrict::find()->where(['dist_name' => $this->district_name])->asArray()->one();
+                $districtCode = empty($result['dist_code']) ? 1100000000 : $result['dist_code'];
 
-                /* обновляем как пациента */
-                if($this->user_id){
-                    $pacient = BioUserPacient::findOne(['user_id'=>$this->user_id]);
+                if ($this->user_id) {
+                    $pacient = BioUserPacient::findOne(['user_id' => $this->user_id]);
                     $pacient->setAttributes([
                         'district_code' => $districtCode,
                         'birthString' => $birthString,
@@ -139,41 +133,46 @@ class RegistrationForm extends Model
                         'polis' => $this->polis,
                         'male' => $this->male,
                     ]);
-                }else{
-                    /* сохраним пользователя для получения ссылки на его ID */
+                } else {
                     $user->save();
-                    /* создаем пациента */
-                    $pacient = new BioUserPacient();
-                    $pacient->setAttributes([
-                        'user_id' => $user->id,
-                        'parent' => null,
-                        'user_doctor_id' => null,
-                        'polis' => $this->polis,
-                        'district_code' => $districtCode,
-                        'male' => $this->male,
-                        'birthString' => $birthString,
-                        'birthUnix' => $birthUnix,
-                    ]);
-                }
+                    if ($user->type == 'pacient') {
+                        $pacient = new BioUserPacient();
+                        $pacient->setAttributes([
+                            'user_id' => $user->id,
+                            'parent' => null,
+                            'user_doctor_id' => null,
+                            'polis' => $this->polis,
+                            'district_code' => $districtCode,
+                            'male' => $this->male,
+                            'birthString' => $birthString,
+                            'birthUnix' => $birthUnix,
+                        ]);
+                        if (!$pacient->validate()) {
+                            if (!$this->user_id) {
+                                BioUser::deleteAll(['id' => $user->id]);
+                            }
+                            return false;
+                        }
+                        $pacient->save();
 
-                if(!$pacient->validate()){
-                    /* если пользователь новый то удалим сразу без вопросов и родителя*/
-                    if(!$this->user_id){
-                        BioUser::deleteAll(['id'=>$user->id]);
+                    } elseif ($user->type == 'doctor') {
+                        $doctor = new BioUserDoctor();
+                        $doctor->setAttributes([
+                            'user_id' => $user->id,
+                            'license' => $this->license,
+                        ]);
+                        if (!$doctor->validate()) {
+                            if (!$this->user_id) {
+                                BioUser::deleteAll(['id' => $user->id]);
+                            }
+                            return false;
+                        }
+                        $doctor->save();
                     }
-
-                    return false;
-                }else{
-                    /* СОХРАНИМ ТОЛЬКО ПОСЛЕ ВСЕХ ВАЛИДАЦИЙ */
-                    if($this->user_id) { // новый пользователь уже сохранен - ему незачем - сохарняем только редактирование
-                        $user->save();
-                    }
-                    $pacient->save();
                 }
 
                 return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
             }
-
         }
         return false;
     }
@@ -190,6 +189,12 @@ class RegistrationForm extends Model
         }
 
         return $this->_user;
+    }
+
+    public function getUserInfo()
+    {
+        $result = BioUser::getUser($this->username);
+        return $result;
     }
 
     public function getBirthDays()
