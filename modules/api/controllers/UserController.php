@@ -5,6 +5,7 @@ use app\modules\api\models\db\BioUser;
 use app\modules\api\models\forms\RegistrationForm;
 use app\modules\api\models\forms\LoginForm;
 use app\modules\api\models\forms\UploadForm;
+use app\modules\api\models\db\BioDoctorPacientConnection;
 use yii\base\Theme;
 use yii\web\UploadedFile;
 use app\modules\api\models\BioFileHelper;
@@ -80,7 +81,8 @@ class UserController extends _ApiController
 
     public function actionRegister()
     {
-        $model = new RegistrationForm();
+        $scenario = Yii::$app->request->post('type') == 'doctor' ? 'doctor' : 'pacient';
+        $model = new RegistrationForm(['scenario' => $scenario]);
         $model->setAttributes(Yii::$app->request->post());
         if ($model->validate() && $model->register()) {
             return [
@@ -109,6 +111,68 @@ class UserController extends _ApiController
                     'success' => false,
                 ];
             }
+        }
+    }
+
+    // доработать завтра формат отсылаемых данных и работу с токеном, без токена посылать в жопец
+
+    public function actionCreateconnectionrequest()
+    {
+        $model = new BioDoctorPacientConnection();
+        $model->setAttributes(Yii::$app->request->post());
+        if ($model->validate() && $model->save()) {
+            return [
+                'success' => true,
+                'connectionInfo' => $model->attributes
+            ];
+        } else {
+            return [
+                'success' => false,
+                'errors' => $model->getErrors(),
+            ];
+        }
+    }
+
+    public function actionApproveconnection()
+    {
+        $model = new BioDoctorPacientConnection();
+        $model->setAttributes(Yii::$app->request->post());
+        $result = $model->findByPacientAndDoctor();
+        if($result){
+            $result->approved = 1;
+            $result->save();
+            return [
+                'success' => true,
+                'connectionInfo' => $result->attributes
+            ];
+        } else {
+            return [
+                'success' => false,
+                'errors' => 'Connect does not exist'
+            ];
+        }
+    }
+
+    public function actionGetdoctorspacients()
+    {
+        if(!empty(Yii::$app->request->post('doctor_id'))) {
+            $pacientList = BioDoctorPacientConnection::findAll(['doctor_id' => Yii::$app->request->post('doctor_id')]);
+            if(!empty($pacientList)){
+                return [
+                    'success' => true,
+                    'errors' => $pacientList
+                ];
+            } else{
+                return [
+                    'success' => false,
+                    'errors' => 'doctor_id can not be blank'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'errors' => 'No results'
+            ];
         }
     }
 }

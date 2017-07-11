@@ -37,6 +37,17 @@ class RegistrationForm extends Model
     private $_user = false;
 
 
+    const SCENARIO_DOCTOR = 'doctor';
+    const SCENARIO_PACIENT = 'pacient';
+
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_DOCTOR => ['license', 'phone', 'username', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear'],
+            self::SCENARIO_PACIENT => ['district_name', 'phone', 'username', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear'],
+        ];
+    }
+
     /**
      * @return array the validation rules.
      */
@@ -44,7 +55,9 @@ class RegistrationForm extends Model
     {
         return [
             // username and password are both required ^$
-            [['phone', 'username', 'password', 'email', 'type', 'district_name'], 'required', 'message' => 'Поле не должно быть пустым'],
+            [['phone', 'username', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear'], 'required', 'message' => 'Поле не должно быть пустым'],
+            [['license'], 'required', 'on' => self::SCENARIO_DOCTOR],
+            [['district_name'], 'required', 'on' => self::SCENARIO_PACIENT],
             ['male', 'required', 'message' => 'Выберите пол.'],
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
@@ -88,92 +101,91 @@ class RegistrationForm extends Model
      */
     public function register()
     {
-        if ($this->validate()) {
-            $time = time();
+        $time = time();
+        if ($this->user_id) {
+            $user = BioUser::findOne(['id' => $this->user_id]);
+            $user->setAttributes([
+                'id' => $this->user_id,
+                'email' => $this->email,
+                'username' => $this->username,
+                'phone' => $this->phone,
+                'updated' => $time
+            ]);
+        } else {
+            $user = new BioUser();
+            $user->setAttributes([
+                'email' => $this->email,
+                'username' => $this->username,
+                'phone' => $this->phone,
+                'passwd' => md5($this->password),
+                'type' => $this->type,
+                'status' => 1,
+                'created' => $time,
+                'updated' => $time,
+                'auth_key' => uniqid("", rand(1000, 9999)),
+                'access_token' => md5(md5(uniqid(rand(), 1)) . md5($this->email)),
+                'path_key' => md5($this->email),
+            ]);
+        }
+
+        if ($user->validate()) {
+
+            $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . array_search($this->birthMonth,
+                    $this->getNumberToMonth()) . '.' . $this->birthYear;
+            $birthUnix = strtotime($birthString . " UTC");
+            $result = BioDistrict::find()->where(['dist_name' => $this->district_name])->asArray()->one();
+            $districtCode = empty($result['dist_code']) ? 1100000000 : $result['dist_code'];
+
             if ($this->user_id) {
-                $user = BioUser::findOne(['id' => $this->user_id]);
-                $user->setAttributes([
-                    'id' => $this->user_id,
-                    'email' => $this->email,
-                    'username' => $this->username,
-                    'phone' => $this->phone,
-                    'updated' => $time
+                $pacient = BioUserPacient::findOne(['user_id' => $this->user_id]);
+                $pacient->setAttributes([
+                    'district_code' => $districtCode,
+                    'birthString' => $birthString,
+                    'birthUnix' => $birthUnix,
+                    'polis' => $this->polis,
+                    'male' => $this->male,
                 ]);
             } else {
-                $user = new BioUser();
-                $user->setAttributes([
-                    'email' => $this->email,
-                    'username' => $this->username,
-                    'phone' => $this->phone,
-                    'passwd' => md5($this->password),
-                    'type' => $this->type,
-                    'status' => 1,
-                    'created' => $time,
-                    'updated' => $time,
-                    'auth_key' => uniqid("", rand(1000, 9999)),
-                    'access_token' => md5(md5(uniqid(rand(), 1)) . md5($this->email)),
-                    'path_key' => md5($this->email),
-                ]);
-            }
-
-            if ($user->validate()) {
-
-                $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . array_search($this->birthMonth,
-                        $this->getNumberToMonth()) . '.' . $this->birthYear;
-                $birthUnix = strtotime($birthString . " UTC");
-                $result = BioDistrict::find()->where(['dist_name' => $this->district_name])->asArray()->one();
-                $districtCode = empty($result['dist_code']) ? 1100000000 : $result['dist_code'];
-
-                if ($this->user_id) {
-                    $pacient = BioUserPacient::findOne(['user_id' => $this->user_id]);
+                $user->save();
+                if ($user->type == 'pacient') {
+                    $pacient = new BioUserPacient();
                     $pacient->setAttributes([
+                        'user_id' => $user->id,
+                        'parent' => null,
+                        'user_doctor_id' => null,
+                        'polis' => $this->polis,
                         'district_code' => $districtCode,
+                        'male' => $this->male,
                         'birthString' => $birthString,
                         'birthUnix' => $birthUnix,
-                        'polis' => $this->polis,
-                        'male' => $this->male,
                     ]);
-                } else {
-                    $user->save();
-                    if ($user->type == 'pacient') {
-                        $pacient = new BioUserPacient();
-                        $pacient->setAttributes([
-                            'user_id' => $user->id,
-                            'parent' => null,
-                            'user_doctor_id' => null,
-                            'polis' => $this->polis,
-                            'district_code' => $districtCode,
-                            'male' => $this->male,
-                            'birthString' => $birthString,
-                            'birthUnix' => $birthUnix,
-                        ]);
-                        if (!$pacient->validate()) {
-                            if (!$this->user_id) {
-                                BioUser::deleteAll(['id' => $user->id]);
-                            }
-                            return false;
+                    if (!$pacient->validate()) {
+                        if (!$this->user_id) {
+                            BioUser::deleteAll(['id' => $user->id]);
                         }
-                        $pacient->save();
-
-                    } elseif ($user->type == 'doctor') {
-                        $doctor = new BioUserDoctor();
-                        $doctor->setAttributes([
-                            'user_id' => $user->id,
-                            'license' => $this->license,
-                        ]);
-                        if (!$doctor->validate()) {
-                            if (!$this->user_id) {
-                                BioUser::deleteAll(['id' => $user->id]);
-                            }
-                            return false;
-                        }
-                        $doctor->save();
+                        return false;
                     }
-                }
+                    $pacient->save();
 
-                return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+                } elseif ($user->type == 'doctor') {
+                    $doctor = new BioUserDoctor();
+                    $doctor->setAttributes([
+                        'user_id' => $user->id,
+                        'license' => $this->license,
+                    ]);
+                    if (!$doctor->validate()) {
+                        if (!$this->user_id) {
+                            BioUser::deleteAll(['id' => $user->id]);
+                        }
+                        return false;
+                    }
+                    $doctor->save();
+                }
             }
+
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
+
         return false;
     }
 
