@@ -18,7 +18,9 @@ $postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',
     'pacient_id' => 18,
     'doctor_id' => 19,
-    'enabled' => 1
+    'enabled' => 1,
+    'read' => 'all',
+    'notice_id' => 3,
 );
 
 /*$postdata = array(
@@ -27,7 +29,7 @@ $postdata = array(
 );*/
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/getpacientdoctors';
+$url = 'user/createconnectionrequest';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

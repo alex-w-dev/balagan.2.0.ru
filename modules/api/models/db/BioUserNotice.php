@@ -22,6 +22,7 @@ class BioUserNotice extends \yii\db\ActiveRecord
         return [
             [['user_id', 'notice_type_id', 'read'], 'required'],
             [['user_id', 'notice_type_id', 'read'], 'integer'],
+            [['c_time', 'extra_data'], 'safe'],
         ];
     }
 
@@ -34,6 +35,7 @@ class BioUserNotice extends \yii\db\ActiveRecord
             'user_id' => 'user id',
             'notice_type_id' => 'notice type',
             'read' => 'read',
+            'extra_data' => 'Extra data in json'
         ];
     }
 }

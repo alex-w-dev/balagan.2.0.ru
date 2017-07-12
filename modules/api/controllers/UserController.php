@@ -9,6 +9,8 @@ use app\modules\api\models\db\BioDoctorPacientConnection;
 use yii\base\Theme;
 use yii\web\UploadedFile;
 use app\modules\api\models\BioFileHelper;
+use app\modules\api\models\db\BioNoticeTypes;
+use app\modules\api\models\db\BioUserNotice;
 use Yii;
 
 class UserController extends _ApiController
@@ -134,6 +136,15 @@ class UserController extends _ApiController
                     ];
                 }
                 $model->save();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('pacient_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 1;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['doctor_id' => Yii::$app->request->post('doctor_id')]);
+                $notice->save();
+
                 return [
                     'success' => true,
                     'result' => $model->attributes
@@ -166,6 +177,23 @@ class UserController extends _ApiController
                     ];
                 }
                 $result->delete();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('doctor_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 2;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['pacient' => Yii::$app->request->post('pacient_id')]);
+                $notice->save();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('pacient_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 2;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['doctor_id' => Yii::$app->request->post('doctor_id')]);
+                $notice->save();
+
                 return [
                     'success' => true,
                 ];
@@ -198,6 +226,23 @@ class UserController extends _ApiController
                 }
                 $result->approved = 1;
                 $result->save();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('doctor_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 3;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['pacient' => Yii::$app->request->post('pacient_id')]);
+                $notice->save();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('pacient_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 3;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['doctor_id' => Yii::$app->request->post('doctor_id')]);
+                $notice->save();
+
                 return [
                     'success' => true,
                     'result' => $result->attributes
@@ -308,8 +353,131 @@ class UserController extends _ApiController
         }
     }
 
-    public function actionGetUserNotices()
+    public function actionGetusernotices()
     {
+        if (!empty($this->user)) {
+            $condition = [
+                'user_id' => $this->user->id,
+                'read' => ''
+            ];
+            if(Yii::$app->request->post('read') != 'all')
+            {
+                $condition['read'] = Yii::$app->request->post('read');
+            } else {
+                unset($condition['read']);
+            }
+            $notices = BioUserNotice::findAll($condition);
+            $result = [];
+            if(!empty($notices)){
+                foreach ($notices as $notice){
+                    $data['read'] = $notice->read;
+                    $data['notice_id'] = $notice->notice_id;
+                    $data['notice_type'] = BioNoticeTypes::findOne(['notice_type_id' => $notice->notice_type_id])->name;
+                    $data['extra_data'] = json_decode($notice->extra_data, true);
+                    $data['c_time'] = $notice->c_time;
+                    $result['notice_id'] = $data;
+                }
+            }
+            return [
+                'success' => true,
+                'result' => $result
+            ];
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
 
+    public function actionDeleteusernotice()
+    {
+        if (!empty($this->user)) {
+            if (!empty(Yii::$app->request->post('notice_id'))) {
+                $notice = BioUserNotice::findOne(['notice_id' => Yii::$app->request->post('notice_id')]);
+                if(!empty($notice)){
+
+                    if(!in_array($this->user->id, array($notice->user_id))){
+                        return [
+                            'success' => false,
+                            'result' => 'You do not have permission'
+                        ];
+                    }
+
+                    if($notice->delete()){
+                        return [
+                            'success' => true,
+                        ];
+                    } else {
+                        return [
+                            'success' => false,
+                            'result' => 'Notice not deleted'
+                        ];
+                    }
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'Notice does not exist'
+                    ];
+                }
+
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'Notice does not exist'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionSetnoticeread()
+    {
+        if (!empty($this->user)) {
+            if (!empty(Yii::$app->request->post('notice_id'))) {
+                $notice = BioUserNotice::findOne(['notice_id' => Yii::$app->request->post('notice_id')]);
+                if(!empty($notice)){
+
+                    if(!in_array($this->user->id, array($notice->user_id))){
+                        return [
+                            'success' => false,
+                            'result' => 'You do not have permission'
+                        ];
+                    }
+
+                    $notice->read = 1;
+                    if($notice->update()){
+                        return [
+                            'success' => true,
+                        ];
+                    } else {
+                        return [
+                            'success' => false,
+                            'result' => 'Notice not deleted'
+                        ];
+                    }
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'Notice does not exist'
+                    ];
+                }
+
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'Notice does not exist'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
     }
 }
