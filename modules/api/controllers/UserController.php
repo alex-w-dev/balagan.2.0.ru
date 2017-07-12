@@ -54,12 +54,12 @@ class UserController extends _ApiController
         if ($model->validate()) {
             return [
                 'success' => true,
-                'user' => $model->getUser(),
+                'result' => $model->getUser(),
             ];
         } else {
             return [
                 'success' => false,
-                'user' => $model->errors,
+                'result' => $model->errors,
             ];
         }
     }
@@ -70,7 +70,7 @@ class UserController extends _ApiController
         if(!empty($this->user)){
             return [
                 'success' => true,
-                'user' => $this->user->getUser($this->user->username),
+                'result' => $this->user->getUser($this->user->username),
             ];
         } else {
             return [
@@ -87,91 +87,204 @@ class UserController extends _ApiController
         if ($model->validate() && $model->register()) {
             return [
                 'success' => true,
-                'user' => $model->getUserInfo(),
+                'result' => $model->getUserInfo(),
             ];
         } else {
             return [
                 'success' => false,
-                'errors' => $model->getErrors(),
+                'result' => $model->getErrors(),
             ];
         }
     }
 
     public function actionUpload()
     {
-        if (Yii::$app->request->isPost) {
-            $dir = BioUser::getPhotoPath($this->user->path_key);
-            BioFileHelper::deleteMainSymbols($dir); // create if not exist inside
-            if(copy($_FILES["file"]["tmp_name"], $dir . '/'. $_FILES["file"]["name"])){
+        if (!empty($this->user)) {
+            if (Yii::$app->request->isPost) {
+                $dir = BioUser::getPhotoPath($this->user->path_key);
+                BioFileHelper::deleteMainSymbols($dir); // create if not exist inside
+                if (copy($_FILES["file"]["tmp_name"], $dir . '/' . $_FILES["file"]["name"])) {
+                    return [
+                        'success' => true,
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                    ];
+                }
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionCreateconnectionrequest()
+    {
+        if (!empty($this->user)) {
+            $model = new BioDoctorPacientConnection();
+            $model->setAttributes(Yii::$app->request->post());
+            if ($model->validate() && $model->save()) {
+                return [
+                    'success' => true,
+                    'result' => $model->attributes
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'result' => $model->getErrors(),
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionDisconnectPacientFromDoctor()
+    {
+        if (!empty($this->user)) {
+            $model = new BioDoctorPacientConnection();
+            $model->setAttributes(Yii::$app->request->post());
+            $result = $model->findByPacientAndDoctor();
+            if ($result) {
+                $result->delete();
                 return [
                     'success' => true,
                 ];
             } else {
                 return [
                     'success' => false,
+                    'result' => 'Connect does not exist'
                 ];
             }
-        }
-    }
-
-    // доработать завтра формат отсылаемых данных и работу с токеном, без токена посылать в жопец
-
-    public function actionCreateconnectionrequest()
-    {
-        $model = new BioDoctorPacientConnection();
-        $model->setAttributes(Yii::$app->request->post());
-        if ($model->validate() && $model->save()) {
-            return [
-                'success' => true,
-                'connectionInfo' => $model->attributes
-            ];
         } else {
             return [
                 'success' => false,
-                'errors' => $model->getErrors(),
+                'result' => 'User does not exist'
             ];
         }
     }
 
     public function actionApproveconnection()
     {
-        $model = new BioDoctorPacientConnection();
-        $model->setAttributes(Yii::$app->request->post());
-        $result = $model->findByPacientAndDoctor();
-        if($result){
-            $result->approved = 1;
-            $result->save();
-            return [
-                'success' => true,
-                'connectionInfo' => $result->attributes
-            ];
+        if (!empty($this->user)) {
+            $model = new BioDoctorPacientConnection();
+            $model->setAttributes(Yii::$app->request->post());
+            $result = $model->findByPacientAndDoctor();
+            if ($result) {
+                $result->approved = 1;
+                $result->save();
+                return [
+                    'success' => true,
+                    'result' => $result->attributes
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'Connect does not exist'
+                ];
+            }
         } else {
             return [
                 'success' => false,
-                'errors' => 'Connect does not exist'
+                'result' => 'User does not exist'
             ];
         }
     }
 
     public function actionGetdoctorspacients()
     {
-        if(!empty(Yii::$app->request->post('doctor_id'))) {
-            $pacientList = BioDoctorPacientConnection::findAll(['doctor_id' => Yii::$app->request->post('doctor_id')]);
-            if(!empty($pacientList)){
-                return [
-                    'success' => true,
-                    'errors' => $pacientList
+        if (!empty($this->user)) {
+            if (!empty(Yii::$app->request->post('doctor_id'))) {
+                $condition = [
+                    'doctor_id' => Yii::$app->request->post('doctor_id'),
+                    'enabled' => ''
                 ];
-            } else{
+
+                if(Yii::$app->request->post('enabled') != 'all')
+                {
+                    $condition['enabled'] = Yii::$app->request->post('enabled');
+                } else {
+                    unset($condition['enabled']);
+                }
+
+                $connectionList= BioDoctorPacientConnection::findAll($condition);
+                if (!empty($connectionList)) {
+                    $pacientList = [];
+                    foreach ($connectionList as $connection){
+                        $pacientList[$connection->pacient_id] = BioUser::getUserInfoById($connection->pacient_id);
+                    }
+                    return [
+                        'success' => true,
+                        'result' => $pacientList
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'doctor_id can not be blank'
+                    ];
+                }
+            } else {
                 return [
                     'success' => false,
-                    'errors' => 'doctor_id can not be blank'
+                    'result' => 'No results'
                 ];
             }
         } else {
             return [
                 'success' => false,
-                'errors' => 'No results'
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionGetpacientdoctors()
+    {
+        if (!empty($this->user)) {
+            if (!empty(Yii::$app->request->post('pacient_id'))) {
+                $condition = [
+                    'pacient_id' => Yii::$app->request->post('pacient_id'),
+                    'enabled' => ''
+                ];
+
+                if(Yii::$app->request->post('enabled') != 'all')
+                {
+                    $condition['enabled'] = Yii::$app->request->post('enabled');
+                } else {
+                    unset($condition['enabled']);
+                }
+
+                $connectionList= BioDoctorPacientConnection::findAll($condition);
+                if (!empty($connectionList)) {
+                    $doctorList = [];
+                    foreach ($connectionList as $connection){
+                        $doctorList[$connection->doctor_id] = BioUser::getUserInfoById($connection->doctor_id);
+                    }
+                    return [
+                        'success' => true,
+                        'result' => $doctorList
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'doctor_id can not be blank'
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'No results'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
             ];
         }
     }

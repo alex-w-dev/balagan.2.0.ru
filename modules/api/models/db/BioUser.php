@@ -225,4 +225,20 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
 
         return $result;
     }
+
+    public static function getUserInfoById($user_id)
+    {
+        $user = BioUser::findByUserId($user_id);
+        $result['user_info'] = $user->attributes;
+        if ($user->type == 'pacient') {
+            $pacient = BioUserPacient::findByUserId($user->id);
+            $result['pacient_info'] = $pacient->attributes;
+        }
+        if ($user->type == 'doctor') {
+            $pacient = BioUserPacient::findByUserId($user->id);
+            $result['doctor_info'] = $pacient->attributes;
+        }
+
+        return $result;
+    }
 }
