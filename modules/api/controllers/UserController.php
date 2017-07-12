@@ -163,7 +163,7 @@ class UserController extends _ApiController
         }
     }
 
-    public function actionDisconnectPacientFromDoctor()
+    public function actionDisconnectpacientfromdoctor()
     {
         if (!empty($this->user)) {
             $model = new BioDoctorPacientConnection();
