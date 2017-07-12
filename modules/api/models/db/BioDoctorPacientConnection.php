@@ -22,6 +22,7 @@ class BioDoctorPacientConnection extends \yii\db\ActiveRecord
         return [
             [['doctor_id', 'pacient_id'], 'required'],
             [['doctor_id', 'pacient_id'], 'integer'],
+            [['doctor_id', 'pacient_id'], 'unique', 'targetAttribute' => ['doctor_id', 'pacient_id']],
         ];
     }
 
