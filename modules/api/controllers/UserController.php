@@ -126,7 +126,14 @@ class UserController extends _ApiController
         if (!empty($this->user)) {
             $model = new BioDoctorPacientConnection();
             $model->setAttributes(Yii::$app->request->post());
-            if ($model->validate() && $model->save()) {
+            if ($model->validate()) {
+                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id')))){
+                    return [
+                        'success' => false,
+                        'result' => 'You do not have permission'
+                    ];
+                }
+                $model->save();
                 return [
                     'success' => true,
                     'result' => $model->attributes
@@ -152,6 +159,12 @@ class UserController extends _ApiController
             $model->setAttributes(Yii::$app->request->post());
             $result = $model->findByPacientAndDoctor();
             if ($result) {
+                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id')))){
+                    return [
+                        'success' => false,
+                        'result' => 'You do not have permission'
+                    ];
+                }
                 $result->delete();
                 return [
                     'success' => true,
@@ -177,6 +190,12 @@ class UserController extends _ApiController
             $model->setAttributes(Yii::$app->request->post());
             $result = $model->findByPacientAndDoctor();
             if ($result) {
+                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id')))){
+                    return [
+                        'success' => false,
+                        'result' => 'You do not have permission'
+                    ];
+                }
                 $result->approved = 1;
                 $result->save();
                 return [
@@ -287,5 +306,10 @@ class UserController extends _ApiController
                 'result' => 'User does not exist'
             ];
         }
+    }
+
+    public function actionGetUserNotices()
+    {
+
     }
 }
