@@ -99,6 +99,30 @@ class UserController extends _ApiController
         }
     }
 
+    public function actionEdituser()
+    {
+        if (!empty($this->user)) {
+            $this->user->setAttributes(Yii::$app->request->post());
+            if($this->user->validate() && $this->user->update()){
+                return [
+                    'success' => true,
+                    'result' => $this->user->getUser($this->user->username),
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'result' => $this->user->getErrors(),
+                ];
+            }
+
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
     public function actionUpload()
     {
         if (!empty($this->user)) {

@@ -29,7 +29,7 @@ $postdata = array(
 );*/
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/createconnectionrequest';
+$url = 'user/edituser';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
