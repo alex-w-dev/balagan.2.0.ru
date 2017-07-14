@@ -1,27 +1,28 @@
 <?php
 $postdata = array(
-    'username' => 'dyupinars4@gmail.com',
+    'username' => 'dyupinars343@gmail.com',
     'password' => '123456',
     'phone' => '89529230181',
-    'email' => 'dyupinars4@gmail.com',
+    'email' => 'dyupinars234@gmail.com',
     'male' => 1,
     'birthDay' => 7,
     'birthMonth' => 'Июнь',
     'birthYear' => 1988,
+    'token' => 'e974ecf5a71803917404bed52e5429b1',
     'type' => 'pacient',
     'license' => 2903478289083489
      );
 
 $filePath = realpath('7.jpg');
 
-$postdata = array(
+/*$postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',
     'pacient_id' => 18,
     'doctor_id' => 19,
     'enabled' => 1,
     'read' => 'all',
     'notice_id' => 3,
-);
+);*/
 
 /*$postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',

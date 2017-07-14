@@ -12,6 +12,8 @@ use app\modules\api\models\BioFileHelper;
 use app\modules\api\models\db\BioNoticeTypes;
 use app\modules\api\models\db\BioUserNotice;
 use Yii;
+use yii\imagine\Image;
+use Imagine\Image\Box;
 
 class UserController extends _ApiController
 {
@@ -103,10 +105,10 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             $this->user->setAttributes(Yii::$app->request->post());
-            if($this->user->validate() && $this->user->update()){
+            if($this->user->validate() /*&& $this->user->update()*/){
                 return [
                     'success' => true,
-                    'result' => $this->user->getUser($this->user->username),
+                    'result' => $this->user->getUserInfoById($this->user->id),
                 ];
             } else {
                 return [
@@ -129,7 +131,11 @@ class UserController extends _ApiController
             if (Yii::$app->request->isPost) {
                 $dir = BioUser::getPhotoPath($this->user->path_key);
                 BioFileHelper::deleteMainSymbols($dir); // create if not exist inside
-                if (copy($_FILES["file"]["tmp_name"], $dir . '/' . $_FILES["file"]["name"])) {
+                $filePath = Yii::getAlias('@app').'/uploads'.$dir;
+                $file = explode('.', $_FILES["file"]["name"]);
+                if (copy($_FILES["file"]["tmp_name"], $filePath . '/user_avatar_big_'.$this->user->id.'.'.$file[1])) {
+                    $photo = Image::getImagine()->open($filePath . '/' . $_FILES["file"]["name"]);
+                    $photo->thumbnail(new Box(256, 256))->save($filePath. '/user_avatar_min_'.$this->user->id.'.'.$file[1], ['quality' => 90]);
                     return [
                         'success' => true,
                     ];

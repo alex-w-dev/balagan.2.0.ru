@@ -44,7 +44,7 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     /* path to images of profile MAIN_DIRECTORY */
     public static function getMainDirectoryPath($path_key){
         /* this finction can't to be changed!!!! */
-        return 'user-files/'. substr($path_key, 0, 3) . '/' . $path_key;
+        return '/'. substr($path_key, 0, 3) . '/' . $path_key;
     }
 
     /* path to images of profile photo */
@@ -214,6 +214,8 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $user = BioUser::findByUsername($userName);
         $result['user_info'] = $user->attributes;
+        $avatars = BioUser::getUserAvatar($user->id);
+        var_dump($avatars);
         if ($user->type == 'pacient') {
             $pacient = BioUserPacient::findByUserId($user->id);
             $result['pacient_info'] = $pacient->attributes;
@@ -230,6 +232,8 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $user = BioUser::findByUserId($user_id);
         $result['user_info'] = $user->attributes;
+        $avatars = BioUser::getUserAvatar($user_id);
+        var_dump($avatars);
         if ($user->type == 'pacient') {
             $pacient = BioUserPacient::findByUserId($user->id);
             $result['pacient_info'] = $pacient->attributes;
@@ -240,5 +244,29 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         }
 
         return $result;
+    }
+
+    public static function getUserAvatar($user_id)
+    {
+        $user = BioUser::findByUserId($user_id);
+        $dir = BioUser::getMainDirectoryPath($user->path_key);
+        $filePath = Yii::getAlias('@app').'/uploads'.$dir.'/photo';
+        $fileUrl = Yii::getAlias('@web').'/uploads'.$dir.'/photo';
+        $files = scandir($filePath);
+        $result['avatar'] = [];
+        if(count($files) > 2){
+            foreach ($files as $file){
+                if(strlen($file) > 2){
+                    if(strpos($file, 'min')){
+                        $result['avatar']['min'] = $fileUrl.'/'.$file;
+                    }
+                    if(strpos($file, 'big')){
+                        $result['avatar']['big'] = $fileUrl.'/'.$file;
+                    }
+                }
+            }
+        }
+        var_dump($result);
+        die;
     }
 }
