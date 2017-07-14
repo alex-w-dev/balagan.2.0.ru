@@ -214,8 +214,7 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $user = BioUser::findByUsername($userName);
         $result['user_info'] = $user->attributes;
-        $avatars = BioUser::getUserAvatar($user->id);
-        var_dump($avatars);
+        $result['avatar'] = BioUser::getUserAvatar($user->id);
         if ($user->type == 'pacient') {
             $pacient = BioUserPacient::findByUserId($user->id);
             $result['pacient_info'] = $pacient->attributes;
@@ -232,8 +231,7 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $user = BioUser::findByUserId($user_id);
         $result['user_info'] = $user->attributes;
-        $avatars = BioUser::getUserAvatar($user_id);
-        var_dump($avatars);
+        $result['avatar'] = BioUser::getUserAvatar($user_id);
         if ($user->type == 'pacient') {
             $pacient = BioUserPacient::findByUserId($user->id);
             $result['pacient_info'] = $pacient->attributes;
@@ -248,25 +246,27 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
 
     public static function getUserAvatar($user_id)
     {
+        $result = [];
         $user = BioUser::findByUserId($user_id);
-        $dir = BioUser::getMainDirectoryPath($user->path_key);
-        $filePath = Yii::getAlias('@app').'/uploads'.$dir.'/photo';
-        $fileUrl = Yii::getAlias('@web').'/uploads'.$dir.'/photo';
-        $files = scandir($filePath);
-        $result['avatar'] = [];
-        if(count($files) > 2){
-            foreach ($files as $file){
-                if(strlen($file) > 2){
-                    if(strpos($file, 'min')){
-                        $result['avatar']['min'] = $fileUrl.'/'.$file;
-                    }
-                    if(strpos($file, 'big')){
-                        $result['avatar']['big'] = $fileUrl.'/'.$file;
+        if(!empty($user)){
+            $dir = BioUser::getMainDirectoryPath($user->path_key);
+            $filePath = Yii::getAlias('@app').'/uploads'.$dir.'/photo';
+            $fileUrl = Yii::getAlias('@web').'/uploads'.$dir.'/photo';
+            $files = scandir($filePath);
+            if(count($files) > 2){
+                foreach ($files as $file){
+                    if(strlen($file) > 2){
+                        if(strpos($file, 'min')){
+                            $result['min'] = $fileUrl.'/'.$file;
+                        }
+                        if(strpos($file, 'big')){
+                            $result['big'] = $fileUrl.'/'.$file;
+                        }
                     }
                 }
             }
         }
-        var_dump($result);
-        die;
+
+        return $result;
     }
 }

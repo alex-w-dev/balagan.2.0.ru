@@ -135,7 +135,7 @@ class UserController extends _ApiController
                 $file = explode('.', $_FILES["file"]["name"]);
                 if (copy($_FILES["file"]["tmp_name"], $filePath . '/user_avatar_big_'.$this->user->id.'.'.$file[1])) {
                     $photo = Image::getImagine()->open($filePath . '/' . $_FILES["file"]["name"]);
-                    $photo->thumbnail(new Box(256, 256))->save($filePath. '/user_avatar_min_'.$this->user->id.'.'.$file[1], ['quality' => 90]);
+                    $photo->thumbnail(new Box(59, 59))->save($filePath. '/user_avatar_min_'.$this->user->id.'.'.$file[1], ['quality' => 90]);
                     return [
                         'success' => true,
                     ];
