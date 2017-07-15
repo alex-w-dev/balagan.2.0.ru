@@ -2,6 +2,7 @@
 
 namespace app\modules\api\models\db;
 
+use app\modules\api\models\BioFileHelper;
 use Yii;
 use yii\web\IdentityInterface;
 
@@ -252,6 +253,7 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             $dir = BioUser::getMainDirectoryPath($user->path_key);
             $filePath = Yii::getAlias('@app').'/uploads'.$dir.'/photo';
             $fileUrl = Yii::getAlias('@web').'/uploads'.$dir.'/photo';
+            BioFileHelper::normalizeDir($filePath);
             $files = scandir($filePath);
             if(count($files) > 2){
                 foreach ($files as $file){
@@ -267,6 +269,6 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             }
         }
 
-        return $result;
+        return count($result) && $result || null;
     }
 }
