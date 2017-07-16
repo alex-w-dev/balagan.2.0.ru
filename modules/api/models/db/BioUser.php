@@ -221,8 +221,8 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             $result['pacient_info'] = $pacient->attributes;
         }
         if ($user->type == 'doctor') {
-            $pacient = BioUserPacient::findByUserId($user->id);
-            $result['doctor_info'] = $pacient->attributes;
+            $doctor = BioUserDoctor::findByUserId($user->id);
+            $result['doctor_info'] = $doctor->attributes;
         }
 
         return $result;
@@ -238,8 +238,8 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             $result['pacient_info'] = $pacient->attributes;
         }
         if ($user->type == 'doctor') {
-            $pacient = BioUserPacient::findByUserId($user->id);
-            $result['doctor_info'] = $pacient->attributes;
+            $doctor = BioUserDoctor::findByUserId($user->id);
+            $result['doctor_info'] = $doctor->attributes;
         }
 
         return $result;

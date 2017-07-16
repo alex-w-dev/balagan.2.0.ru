@@ -14,6 +14,11 @@ class BioUserDoctor extends \yii\db\ActiveRecord
         return '{{%bio_user_doctor}}';
     }
 
+
+    public static function findByUserId($user_id){
+        return self::find()->where(['user_id'=>$user_id])->one();
+    }
+
     /**
      * @inheritdoc
      */
