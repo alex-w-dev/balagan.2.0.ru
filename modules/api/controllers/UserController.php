@@ -135,6 +135,14 @@ class UserController extends _ApiController
                 $filePath = Yii::getAlias('@app').'/uploads'.$dir;
                 BioFileHelper::deleteMainSymbols($filePath); // create if not exist inside
                 $file = explode('.', $_FILES["file"]["name"]);
+
+                $filesToDel = scandir($filePath);
+                foreach ($filesToDel as $fileToDel){
+                    if(count($fileToDel) > 2) {
+                        unlink($filePath . '/' . $fileToDel);
+                    }
+                }
+
                 if (copy($_FILES["file"]["tmp_name"], $filePath . '/user_avatar_big_'.$this->user->id.'.'.$file[1])) {
                     $photo = Image::getImagine()->open($filePath . '/user_avatar_big_'.$this->user->id.'.'.$file[1]);
                     $photo->thumbnail(new Box(59, 59))->save($filePath. '/user_avatar_min_'.$this->user->id.'.'.$file[1], ['quality' => 90]);

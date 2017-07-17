@@ -13,7 +13,7 @@ $postdata = array(
     'license' => 2903478289083489
      );
 
-$filePath = realpath('7.jpg');
+$filePath = realpath('8.jpg');
 
 /*$postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',
@@ -25,14 +25,14 @@ $filePath = realpath('7.jpg');
 );*/
 
 $postdata = array(
-    'token' => 'e974ecf5a71803917404bed52e5429b1',
+    'token' => '8c62fe3b035c54badbae6f8dac79e5a6ef581b1c0693057a1f310261e7f59616',
     'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
 );
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/user';
+$url = 'settings/all-pacients';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
