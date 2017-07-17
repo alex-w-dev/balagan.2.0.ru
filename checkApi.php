@@ -24,13 +24,13 @@ $filePath = realpath('7.jpg');
     'notice_id' => 3,
 );*/
 
-/*$postdata = array(
-    'token' => 'e974ecf5a71803917404bed52e5429b1',
+$postdata = array(
+    'token' => 'eceb135bef7ed51e9a173ae44c7eaa27',
     'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
-);*/
+);
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/edituser';
+$url = 'user/upload';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
