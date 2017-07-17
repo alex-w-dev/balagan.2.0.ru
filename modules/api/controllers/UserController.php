@@ -406,6 +406,7 @@ class UserController extends _ApiController
             } else {
                 unset($condition['read']);
             }
+
             $notices = BioUserNotice::findAll($condition);
             $result = [];
             if(!empty($notices)){
@@ -415,7 +416,7 @@ class UserController extends _ApiController
                     $data['notice_type'] = BioNoticeTypes::findOne(['notice_type_id' => $notice->notice_type_id])->name;
                     $data['extra_data'] = json_decode($notice->extra_data, true);
                     $data['c_time'] = $notice->c_time;
-                    $result['notice_id'] = $data;
+                    $result[$notice->notice_id] = $data;
                 }
             }
             return [

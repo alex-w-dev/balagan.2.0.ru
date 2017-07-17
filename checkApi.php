@@ -25,12 +25,13 @@ $filePath = realpath('8.jpg');
 );*/
 
 $postdata = array(
-    'token' => '8c62fe3b035c54badbae6f8dac79e5a6ef581b1c0693057a1f310261e7f59616',
-    'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
+    'token' => 'f9e6a8de4ae620ec4f3523620e65b216',
+    'read' => 'all'
+    //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
 );
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'settings/all-pacients';
+$url = 'user/getusernotices';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
