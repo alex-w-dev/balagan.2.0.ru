@@ -13,7 +13,7 @@ $postdata = array(
     'license' => 2903478289083489
      );
 
-$filePath = realpath('8.jpg');
+$filePath = realpath('7.jpg');
 
 /*$postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',
@@ -25,13 +25,13 @@ $filePath = realpath('8.jpg');
 );*/
 
 $postdata = array(
-    'token' => '9750eb619da8d27f9e461ac56acb6ddd',
-    'enabled' => 'all'
-    //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
+    'token' => 'f9e6a8de4ae620ec4f3523620e65b216',
+    //'enabled' => 'all'
+    'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
 );
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/getdoctorspacients';
+$url = 'user/upload';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
