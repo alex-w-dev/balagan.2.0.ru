@@ -185,6 +185,14 @@ class UserController extends _ApiController
                 $notice->extra_data = json_encode(['doctor_id' => Yii::$app->request->post('doctor_id')]);
                 $notice->save();
 
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('doctor_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 1;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['pacient_id' => Yii::$app->request->post('pacient_id')]);
+                $notice->save();
+
                 return [
                     'success' => true,
                     'result' => $model->attributes
