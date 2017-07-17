@@ -46,6 +46,7 @@ class BioFileHelper extends Model
     {
         /* dir  is not found - create empty */
         $dir = self::normalizeDir($dir);
+        var_dump($dir);
 
         $files = BaseFileHelper::findFiles($dir);
         foreach ($files as $file) {

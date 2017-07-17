@@ -43,6 +43,6 @@ if ($output === FALSE) {
     echo "cURL Error: " . curl_error($ch);
     return;
 }
-
-print_r($output);
+echo '<pre>';
+var_dump(json_decode($output, true));
 curl_close($ch);

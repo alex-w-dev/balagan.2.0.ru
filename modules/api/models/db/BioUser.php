@@ -45,7 +45,7 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     /* path to images of profile MAIN_DIRECTORY */
     public static function getMainDirectoryPath($path_key){
         /* this finction can't to be changed!!!! */
-        return '/'. substr($path_key, 0, 3) . '/' . $path_key;
+        return '/'. $path_key;
     }
 
     /* path to images of profile photo */
@@ -253,22 +253,24 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             $dir = BioUser::getMainDirectoryPath($user->path_key);
             $filePath = Yii::getAlias('@app').'/uploads'.$dir.'/photo';
             $fileUrl = Yii::getAlias('@web').'/uploads'.$dir.'/photo';
-            BioFileHelper::normalizeDir($filePath);
-            $files = scandir($filePath);
-            if(count($files) > 2){
-                foreach ($files as $file){
-                    if(strlen($file) > 2){
-                        if(strpos($file, 'min')){
-                            $result['min'] = $fileUrl.'/'.$file;
-                        }
-                        if(strpos($file, 'big')){
-                            $result['big'] = $fileUrl.'/'.$file;
+            if(file_exists($filePath)){
+                BioFileHelper::normalizeDir($filePath);
+                $files = scandir($filePath);
+                if(count($files) > 2){
+                    foreach ($files as $file){
+                        if(strlen($file) > 2){
+                            if(strpos($file, 'min')){
+                                $result['min'] = $fileUrl.'/'.$file;
+                            }
+                            if(strpos($file, 'big')){
+                                $result['big'] = $fileUrl.'/'.$file;
+                            }
                         }
                     }
                 }
             }
         }
 
-        return count($result) && $result || null;
+        return $result;
     }
 }
