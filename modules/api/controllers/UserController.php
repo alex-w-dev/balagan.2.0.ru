@@ -2,6 +2,8 @@
 namespace app\modules\api\controllers;
 
 use app\modules\api\models\db\BioUser;
+use app\modules\api\models\db\BioUserDoctor;
+use app\modules\api\models\db\BioUserPacient;
 use app\modules\api\models\forms\RegistrationForm;
 use app\modules\api\models\forms\LoginForm;
 use app\modules\api\models\forms\UploadForm;
@@ -105,7 +107,7 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             $this->user->setAttributes(Yii::$app->request->post());
-            if($this->user->validate() /*&& $this->user->update()*/){
+            if($this->user->validate() && $this->user->update()){
                 return [
                     'success' => true,
                     'result' => $this->user->getUserInfoById($this->user->id),
@@ -130,11 +132,11 @@ class UserController extends _ApiController
         if (!empty($this->user)) {
             if (Yii::$app->request->isPost) {
                 $dir = BioUser::getPhotoPath($this->user->path_key);
-                BioFileHelper::deleteMainSymbols($dir); // create if not exist inside
                 $filePath = Yii::getAlias('@app').'/uploads'.$dir;
+                BioFileHelper::deleteMainSymbols($filePath); // create if not exist inside
                 $file = explode('.', $_FILES["file"]["name"]);
                 if (copy($_FILES["file"]["tmp_name"], $filePath . '/user_avatar_big_'.$this->user->id.'.'.$file[1])) {
-                    $photo = Image::getImagine()->open($filePath . '/' . $_FILES["file"]["name"]);
+                    $photo = Image::getImagine()->open($filePath . '/user_avatar_big_'.$this->user->id.'.'.$file[1]);
                     $photo->thumbnail(new Box(59, 59))->save($filePath. '/user_avatar_min_'.$this->user->id.'.'.$file[1], ['quality' => 90]);
                     return [
                         'success' => true,
