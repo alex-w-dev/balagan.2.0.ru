@@ -168,6 +168,39 @@ class UserController extends _ApiController
         if (!empty($this->user)) {
             $model = new BioDoctorPacientConnection();
             $model->setAttributes(Yii::$app->request->post());
+            $existing = $model->findByPacientAndDoctor();
+
+            if(!empty($existing) && $existing->approved = 1){
+                return [
+                    'success' => false,
+                    'result' => 'Connect already exist'
+                ];
+            } elseif(!empty($existing) && $existing->approved = 2){
+                $existing->approved = 0;
+                $existing->save();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('pacient_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 1;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['doctor_id' => Yii::$app->request->post('doctor_id')]);
+                $notice->save();
+
+                $notice = new BioUserNotice();
+                $notice->user_id = Yii::$app->request->post('doctor_id');
+                $notice->read = 0;
+                $notice->notice_type_id = 1;
+                $notice->c_time = new \yii\db\Expression('NOW()');
+                $notice->extra_data = json_encode(['pacient_id' => Yii::$app->request->post('pacient_id')]);
+                $notice->save();
+
+                return [
+                    'success' => true,
+                    'result' => $existing->attributes
+                ];
+            }
+
             if ($model->validate()) {
                 if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id')))){
                     return [
@@ -224,7 +257,8 @@ class UserController extends _ApiController
                         'result' => 'You do not have permission'
                     ];
                 }
-                $result->delete();
+                $result->approved = 2;
+                $result->save();
 
                 $notice = new BioUserNotice();
                 $notice->user_id = Yii::$app->request->post('doctor_id');
@@ -316,14 +350,14 @@ class UserController extends _ApiController
                 $doctor_id = $this->user->id;
                 $condition = [
                     'doctor_id' => $doctor_id,
-                    'enabled' => ''
+                    'approved' => ''
                 ];
 
-                if(Yii::$app->request->post('enabled') != 'all')
+                if(Yii::$app->request->post('approved') != 'all')
                 {
-                    $condition['enabled'] = Yii::$app->request->post('enabled');
+                    $condition['approved'] = Yii::$app->request->post('approved');
                 } else {
-                    unset($condition['enabled']);
+                    unset($condition['approved']);
                 }
 
                 $connectionList= BioDoctorPacientConnection::findAll($condition);
@@ -331,6 +365,7 @@ class UserController extends _ApiController
                     $pacientList = [];
                     foreach ($connectionList as $connection){
                         $pacientList[$connection->pacient_id] = BioUser::getUserInfoById($connection->pacient_id);
+                        $pacientList[$connection->pacient_id]['pacient_info']['approved'] = $connection->approved;
                     }
                     return [
                         'success' => true,
