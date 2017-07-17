@@ -312,8 +312,8 @@ class UserController extends _ApiController
     public function actionGetdoctorspacients()
     {
         if (!empty($this->user)) {
-            if (!empty(Yii::$app->request->post('doctor_id')) || $this->user->type == 'doctor') {
-                $doctor_id = !empty(Yii::$app->request->post('doctor_id')) ? Yii::$app->request->post('doctor_id') : $this->user->id;
+            if ($this->user->type == 'doctor') {
+                $doctor_id = $this->user->id;
                 $condition = [
                     'doctor_id' => $doctor_id,
                     'enabled' => ''
@@ -359,9 +359,9 @@ class UserController extends _ApiController
     public function actionGetpacientdoctors()
     {
         if (!empty($this->user)) {
-            if (!empty(Yii::$app->request->post('pacient_id'))) {
+            if ($this->user->type == 'pacient') {
                 $condition = [
-                    'pacient_id' => Yii::$app->request->post('pacient_id'),
+                    'pacient_id' => $this->user->id,
                     'enabled' => ''
                 ];
 
