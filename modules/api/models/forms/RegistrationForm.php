@@ -18,7 +18,9 @@ use yii\base\Model;
 class RegistrationForm extends Model
 {
 
-    public $username;
+    public $name;
+    public $surname;
+    public $patronymic;
     public $birthDay;
     public $birthMonth;
     public $birthYear;
@@ -43,8 +45,8 @@ class RegistrationForm extends Model
     public function scenarios()
     {
         return [
-            self::SCENARIO_DOCTOR => ['license', 'phone', 'username', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear'],
-            self::SCENARIO_PACIENT => ['district_name', 'phone', 'username', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear'],
+            self::SCENARIO_DOCTOR => ['license', 'phone', 'name', 'surname', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_PACIENT => ['district_name', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
         ];
     }
 
@@ -55,7 +57,7 @@ class RegistrationForm extends Model
     {
         return [
             // username and password are both required ^$
-            [['phone', 'username', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear'], 'required', 'message' => 'Поле не должно быть пустым'],
+            [['phone', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'name', 'surname'], 'required', 'message' => 'Поле не должно быть пустым'],
             [['license'], 'required', 'on' => self::SCENARIO_DOCTOR],
             [['district_name'], 'required', 'on' => self::SCENARIO_PACIENT],
             ['male', 'required', 'message' => 'Выберите пол.'],
@@ -73,7 +75,7 @@ class RegistrationForm extends Model
             ['phone', 'match', 'pattern' => '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/u', 'message' => 'Неверный формат номера телефона.'],
             // password is validated by validatePassword()
             /*['password', 'validatePassword'],*/
-            [['promo', 'polis', 'user_id'], 'safe'],
+            [['promo', 'polis', 'user_id', 'patronymic'], 'safe'],
         ];
     }
 
@@ -90,7 +92,7 @@ class RegistrationForm extends Model
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Incorrect email or password.');
             }
         }
     }
@@ -107,7 +109,9 @@ class RegistrationForm extends Model
             $user->setAttributes([
                 'id' => $this->user_id,
                 'email' => $this->email,
-                'username' => $this->username,
+                'name' => $this->name,
+                'patronymic' => $this->patronymic,
+                'surname' => $this->surname,
                 'phone' => $this->phone,
                 'updated' => $time
             ]);
@@ -115,7 +119,9 @@ class RegistrationForm extends Model
             $user = new BioUser();
             $user->setAttributes([
                 'email' => $this->email,
-                'username' => $this->username,
+                'name' => $this->name,
+                'patronymic' => $this->patronymic,
+                'surname' => $this->surname,
                 'phone' => $this->phone,
                 'passwd' => md5($this->password),
                 'type' => $this->type,
@@ -197,7 +203,7 @@ class RegistrationForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = BioUser::findByUsername($this->username);
+            $this->_user = BioUser::findByEmail($this->email);
         }
 
         return $this->_user;
@@ -205,7 +211,10 @@ class RegistrationForm extends Model
 
     public function getUserInfo()
     {
-        $result = BioUser::getUser($this->username);
+        if ($this->_user === false) {
+            $this->_user = BioUser::findByEmail($this->email);
+        }
+        $result = BioUser::getUserInfoById($this->_user->id);
         return $result;
     }
 

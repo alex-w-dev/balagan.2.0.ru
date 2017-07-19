@@ -76,7 +76,7 @@ class UserController extends _ApiController
         if(!empty($this->user)){
             return [
                 'success' => true,
-                'result' => $this->user->getUser($this->user->username),
+                'result' => $this->user->getUserInfoById($this->user->id),
             ];
         } else {
             return [
@@ -175,18 +175,11 @@ class UserController extends _ApiController
                 ];
             } elseif(!empty($existing) && $existing->approved = 2){
                 $existing->approved = 0;
+                $existing->initiator = $this->user->id;
                 $existing->save();
 
                 $notice = new BioUserNotice();
-                $notice->user_id = Yii::$app->request->post('pacient_id');
-                $notice->read = 0;
-                $notice->notice_type_id = 1;
-                $notice->c_time = new \yii\db\Expression('NOW()');
-                $notice->extra_data = json_encode(['doctor_id' => Yii::$app->request->post('doctor_id'), 'pacient_id' => Yii::$app->request->post('pacient_id')]);
-                $notice->save();
-
-                $notice = new BioUserNotice();
-                $notice->user_id = Yii::$app->request->post('doctor_id');
+                $notice->user_id = $this->user->id;
                 $notice->read = 0;
                 $notice->notice_type_id = 1;
                 $notice->c_time = new \yii\db\Expression('NOW()');
@@ -206,18 +199,11 @@ class UserController extends _ApiController
                         'result' => 'You do not have permission'
                     ];
                 }
+                $model->initiator = $this->user->id;
                 $model->save();
 
                 $notice = new BioUserNotice();
-                $notice->user_id = Yii::$app->request->post('pacient_id');
-                $notice->read = 0;
-                $notice->notice_type_id = 1;
-                $notice->c_time = new \yii\db\Expression('NOW()');
-                $notice->extra_data = json_encode(['pacient_id' => Yii::$app->request->post('pacient_id'), 'doctor_id' => Yii::$app->request->post('doctor_id')]);
-                $notice->save();
-
-                $notice = new BioUserNotice();
-                $notice->user_id = Yii::$app->request->post('doctor_id');
+                $notice->user_id = $this->user->id;
                 $notice->read = 0;
                 $notice->notice_type_id = 1;
                 $notice->c_time = new \yii\db\Expression('NOW()');
@@ -249,7 +235,7 @@ class UserController extends _ApiController
             $model->setAttributes(Yii::$app->request->post());
             $result = $model->findByPacientAndDoctor();
             if ($result) {
-                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id')))){
+                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id'))) || $result->initiator == $this->user->id){
                     return [
                         'success' => false,
                         'result' => 'You do not have permission'
@@ -298,7 +284,7 @@ class UserController extends _ApiController
             $model->setAttributes(Yii::$app->request->post());
             $result = $model->findByPacientAndDoctor();
             if ($result) {
-                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id')))){
+                if(!in_array($this->user->id, array(Yii::$app->request->post('doctor_id'), Yii::$app->request->post('pacient_id'))) || $result->initiator == $this->user->id){
                     return [
                         'success' => false,
                         'result' => 'You do not have permission'
@@ -556,6 +542,37 @@ class UserController extends _ApiController
                     'result' => 'Notice does not exist'
                 ];
             }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionFindUsersByFio()
+    {
+        if (!empty($this->user)) {
+            $sql = "SELECT bu.id FROM bio_user bu WHERE CONCAT_WS(' ',bu.surname, bu.name, bu.patronymic) LIKE '%" . Yii::$app->request->post('find') . "%' AND bu.type='pacient'";
+            $search = BioUser::findBySql($sql)->all();
+            $result = [];
+            if(!empty($search)){
+                foreach ($search as $user){
+                    $result[$user->id] = BioUser::getUserInfoById($user->id);
+                }
+            }
+            if(count($result) > 0){
+                return [
+                    'success' => true,
+                    'result' => $result
+                ];
+            } else {
+                return [
+                    'success' => true,
+                    'result' => 'no results'
+                ];
+            }
+
         } else {
             return [
                 'success' => false,

@@ -65,12 +65,12 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'phone', 'passwd', 'type', 'created', 'updated', 'username'], 'required'],
+            [['email', 'phone', 'passwd', 'type', 'created', 'updated', 'name', 'surname'], 'required'],
             [['status', 'created', 'updated'], 'integer'],
             [['email'], 'string', 'max' => 100],
             [['passwd', 'type', 'auth_key', 'path_key'], 'string', 'max' => 45],
-            [['access_token', 'username'], 'string', 'max' => 255],
-            [['username'], 'unique'],
+            [['access_token', 'patronymic', 'surname'], 'string', 'max' => 255],
+            [['email'], 'unique'],
             ['phone', 'match', 'pattern' => '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/u', 'message' => 'Неверный формат номера телефона.'],
         ];
     }
@@ -84,7 +84,9 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'email' => 'Email',
             'phone' => 'Номер телефона',
-            'username' => 'Username',
+            'name' => 'Имя',
+            'surname' => 'Фамилия',
+            'patronymic' => 'Отчество',
             'passwd' => 'Passwd',
             'type' => 'Type',
             'status' => 'Status',
@@ -124,15 +126,10 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         return static::findOne($id);
     }
 
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
+
+    public static function findByEmail($email)
     {
-        return self::findOne(['username' => $username]);
+        return self::findOne(['email' => $email]);
     }
 
     /**
@@ -209,23 +206,6 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     public function validateAuthKey($auth_key)
     {
         return $this->auth_key === $auth_key;
-    }
-
-    public static function getUser($userName)
-    {
-        $user = BioUser::findByUsername($userName);
-        $result['user_info'] = $user->attributes;
-        $result['avatar'] = BioUser::getUserAvatar($user->id);
-        if ($user->type == 'pacient') {
-            $pacient = BioUserPacient::findByUserId($user->id);
-            $result['pacient_info'] = $pacient->attributes;
-        }
-        if ($user->type == 'doctor') {
-            $doctor = BioUserDoctor::findByUserId($user->id);
-            $result['doctor_info'] = $doctor->attributes;
-        }
-
-        return $result;
     }
 
     public static function getUserInfoById($user_id)

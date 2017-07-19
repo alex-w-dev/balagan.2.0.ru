@@ -1,9 +1,11 @@
 <?php
 $postdata = array(
-    'username' => 'dyupinars343@gmail.com',
+    'name' => 'ололололол',
+    'district_name' => 'Баевский район',
+    'surname' => 'ололололо',
     'password' => '123456',
     'phone' => '89529230181',
-    'email' => 'dyupinars234@gmail.com',
+    'email' => 'dyupinars234123@gmail.com',
     'male' => 1,
     'birthDay' => 7,
     'birthMonth' => 'Июнь',
@@ -25,15 +27,18 @@ $filePath = realpath('7.jpg');
 );*/
 
 $postdata = array(
-    'token' => 'f9e6a8de4ae620ec4f3523620e65b216',
+    'token' => 'adb4d3871eeeaf17b5d98002676c2d68',
+    'pacient_id' => 18,
+    'doctor_id' => 19,
     //'enabled' => 'all'
-    'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
+    //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
 );
+
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/upload';
+$url = 'user/approveconnection';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
