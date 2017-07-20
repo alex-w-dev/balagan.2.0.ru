@@ -106,6 +106,9 @@ class UserController extends _ApiController
     public function actionEdituser()
     {
         if (!empty($this->user)) {
+            $scenario = Yii::$app->request->post('type') == 'doctor' ? 'doctor' : 'pacient';
+            $this->user->setScenario($scenario);
+            //$model = new RegistrationForm(['scenario' => $scenario]);
             $this->user->setAttributes(Yii::$app->request->post());
             if($this->user->validate() && $this->user->update()){
                 return [

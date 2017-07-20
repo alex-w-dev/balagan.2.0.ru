@@ -29,7 +29,7 @@ class RegistrationForm extends Model
     public $phone;
     public $promo;
     public $password;
-    public $district_name;
+    public $district_code;
     public $user_id;
     public $polis;
     public $type;
@@ -46,7 +46,7 @@ class RegistrationForm extends Model
     {
         return [
             self::SCENARIO_DOCTOR => ['license', 'phone', 'name', 'surname', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
-            self::SCENARIO_PACIENT => ['district_name', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_PACIENT => ['district_code', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
         ];
     }
 
@@ -59,14 +59,14 @@ class RegistrationForm extends Model
             // username and password are both required ^$
             [['phone', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'name', 'surname'], 'required', 'message' => 'Поле не должно быть пустым'],
             [['license'], 'required', 'on' => self::SCENARIO_DOCTOR],
-            [['district_name'], 'required', 'on' => self::SCENARIO_PACIENT],
+            [['district_code'], 'required', 'on' => self::SCENARIO_PACIENT],
             ['male', 'required', 'message' => 'Выберите пол.'],
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
             [['license'], 'string', 'max' => 120],
-            ['district_name', 'in', 'range' => $this->getDistricts(), 'message' => 'Пожалуйста выберите регион проживания.'],
+            //['district_name', 'in', 'range' => $this->getDistricts(), 'message' => 'Пожалуйста выберите регион проживания.'],
             ['birthDay', 'in', 'range' => $this->getBirthDays(), 'message' => 'Пожалуйста выберите день.'],
-            ['birthMonth', 'in', 'range' => $this->getBirthMonths(), 'message' => 'Пожалуйста выберите месяц.'],
+            ['birthMonth', 'in', 'range' => [1,2,3,4,5,6,7,8,9,10,11,12], 'message' => 'Пожалуйста выберите месяц.'],
             ['birthYear', 'in', 'range' => $this->getBirthYears(), 'message' => 'Пожалуйста выберите год.'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
@@ -117,6 +117,8 @@ class RegistrationForm extends Model
             ]);
         } else {
             $user = new BioUser();
+            $scenario = $this->type == 'doctor' ? 'doctor' : 'pacient';
+            $user->setScenario($scenario);
             $user->setAttributes([
                 'email' => $this->email,
                 'name' => $this->name,
@@ -136,16 +138,15 @@ class RegistrationForm extends Model
 
         if ($user->validate()) {
 
-            $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . array_search($this->birthMonth,
-                    $this->getNumberToMonth()) . '.' . $this->birthYear;
+            $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . str_pad($this->birthMonth, 2, '0', STR_PAD_LEFT) . '.' . $this->birthYear;
             $birthUnix = strtotime($birthString . " UTC");
-            $result = BioDistrict::find()->where(['dist_name' => $this->district_name])->asArray()->one();
-            $districtCode = empty($result['dist_code']) ? 1100000000 : $result['dist_code'];
+            //$result = BioDistrict::find()->where(['dist_name' => $this->district_name])->asArray()->one();
+            //$districtCode = empty($result['dist_code']) ? 1100000000 : $result['dist_code'];
 
             if ($this->user_id) {
                 $pacient = BioUserPacient::findOne(['user_id' => $this->user_id]);
                 $pacient->setAttributes([
-                    'district_code' => $districtCode,
+                    'district_code' => $this->district_code,
                     'birthString' => $birthString,
                     'birthUnix' => $birthUnix,
                     'polis' => $this->polis,
@@ -160,7 +161,7 @@ class RegistrationForm extends Model
                         'parent' => null,
                         'user_doctor_id' => null,
                         'polis' => $this->polis,
-                        'district_code' => $districtCode,
+                        'district_code' => $this->district_code,
                         'male' => $this->male,
                         'birthString' => $birthString,
                         'birthUnix' => $birthUnix,

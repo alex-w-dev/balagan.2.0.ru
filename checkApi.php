@@ -1,18 +1,17 @@
 <?php
 $postdata = array(
-    'name' => 'ололололол',
-    'district_name' => 'Баевский район',
-    'surname' => 'ололололо',
+    'name' => '34523453wer45',
+    'surname' => 'asdasd',
     'password' => '123456',
     'phone' => '89529230181',
-    'email' => 'dyupinars234123@gmail.com',
+    'email' => 'dyupinars2312436123@gmail.com',
     'male' => 1,
     'birthDay' => 7,
-    'birthMonth' => 'Июнь',
+    'birthMonth' => 6,
     'birthYear' => 1988,
-    'token' => 'e974ecf5a71803917404bed52e5429b1',
+    'token' => '7ab782c32193ad9e8f5bdd771600b39c',
     'type' => 'pacient',
-    'license' => 2903478289083489
+    'district_code' => 1101000000
      );
 
 $filePath = realpath('7.jpg');
@@ -26,17 +25,17 @@ $filePath = realpath('7.jpg');
     'notice_id' => 3,
 );*/
 
-$postdata = array(
-    'token' => 'adb4d3871eeeaf17b5d98002676c2d68',
+/*$postdata = array(
+    'token' => '7ab782c32193ad9e8f5bdd771600b39c',
     'pacient_id' => 18,
     'doctor_id' => 19,
     //'enabled' => 'all'
     //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
-);
+);*/
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/approveconnection';
+$url = 'user/register';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
