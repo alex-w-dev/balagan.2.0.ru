@@ -216,9 +216,11 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         if ($user->type == 'pacient') {
             $pacient = BioUserPacient::findByUserId($user->id);
             $result['pacient_info'] = $pacient->attributes;
-            $dist = BioDistrict::find()->where(['dist_code' => $pacient->district_code])->asArray()->one();
-            if(!empty($dist)){
-                $result['pacient_info']['district_name'] = $dist->dist_name;
+            if(!empty($pacient->district_code)){
+                $dist = BioDistrict::find()->where(['dist_code' => $pacient->district_code])->one();
+                if(!empty($dist)){
+                    $result['pacient_info']['district_name'] = $dist->dist_name;
+                }
             }
         }
         if ($user->type == 'doctor') {

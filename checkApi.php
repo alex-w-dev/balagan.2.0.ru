@@ -2,9 +2,9 @@
 $postdata = array(
     'name' => '34523453wer45',
     'surname' => 'asdasd',
-    'password' => '123456',
+    'password' => 'pat2',
     'phone' => '89529230181',
-    'email' => 'dyupinars231qw2436123@gmail.com',
+    'email' => 'pat2@pat2.pat2',
     'male' => 1,
     'birthDay' => 18,
     'birthMonth' => 7,
@@ -35,9 +35,9 @@ $filePath = realpath('7.jpg');
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/edituser';
+$url = 'user/login';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
