@@ -117,8 +117,6 @@ class RegistrationForm extends Model
             ]);
         } else {
             $user = new BioUser();
-            $scenario = $this->type == 'doctor' ? 'doctor' : 'pacient';
-            $user->setScenario($scenario);
             $user->setAttributes([
                 'email' => $this->email,
                 'name' => $this->name,
@@ -188,6 +186,52 @@ class RegistrationForm extends Model
                     }
                     $doctor->save();
                 }
+            }
+
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+        }
+
+        return false;
+    }
+
+    public function updateUserById($id, $attributes)
+    {
+        $time = time();
+        $user = BioUser::findOne(['id' => $id]);
+        if ($user) {
+            $this->setAttributes($user->attributes);
+            $this->setAttributes($attributes);
+             $user->setAttributes([
+                'id' => $this->user_id,
+                'name' => $this->name,
+                'patronymic' => $this->patronymic,
+                'surname' => $this->surname,
+                'phone' => $this->phone,
+                'updated' => $time
+            ]);
+        }
+
+        if ($user->validate()) {
+            $user->update();
+            $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . str_pad($this->birthMonth, 2, '0', STR_PAD_LEFT) . '.' . $this->birthYear;
+            $birthUnix = strtotime($birthString . " UTC");
+
+            if ($user->type == 'pacient') {
+                $pacient = BioUserPacient::findOne(['user_id' => $id]);
+                $pacient->setAttributes([
+                    'district_code' => $this->district_code,
+                    'birthString' => $birthString,
+                    'birthUnix' => $birthUnix,
+                    'polis' => $this->polis,
+                    'male' => $this->male,
+                ]);
+                $pacient->update();
+            } elseif ($user->type == 'doctor') {
+                $doctor = BioUserDoctor::findOne(['user_id' => $id]);
+                $doctor->setAttributes([
+                    'license' => $this->license,
+                ]);
+                $doctor->update();
             }
 
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);

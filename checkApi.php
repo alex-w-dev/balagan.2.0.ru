@@ -4,10 +4,10 @@ $postdata = array(
     'surname' => 'asdasd',
     'password' => '123456',
     'phone' => '89529230181',
-    'email' => 'dyupinars2312436123@gmail.com',
+    'email' => 'dyupinars231qw2436123@gmail.com',
     'male' => 1,
-    'birthDay' => 7,
-    'birthMonth' => 6,
+    'birthDay' => 18,
+    'birthMonth' => 7,
     'birthYear' => 1988,
     'token' => '7ab782c32193ad9e8f5bdd771600b39c',
     'type' => 'pacient',
@@ -35,7 +35,7 @@ $filePath = realpath('7.jpg');
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/register';
+$url = 'user/edituser';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

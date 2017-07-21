@@ -59,17 +59,6 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
 
-    const SCENARIO_DOCTOR = 'doctor';
-    const SCENARIO_PACIENT = 'pacient';
-
-    public function scenarios()
-    {
-        return [
-            self::SCENARIO_DOCTOR => ['license', 'phone', 'name', 'surname', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
-            self::SCENARIO_PACIENT => ['district_code', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -81,11 +70,6 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             [['email'], 'string', 'max' => 100],
             [['passwd', 'type', 'auth_key', 'path_key'], 'string', 'max' => 45],
             [['access_token', 'patronymic', 'surname'], 'string', 'max' => 255],
-            [['license'], 'required', 'on' => self::SCENARIO_DOCTOR],
-            [['district_code, birthDay, birthMonth, birthYear'], 'required', 'on' => self::SCENARIO_PACIENT],
-            ['birthDay', 'in', 'range' => $this->getBirthDays(), 'message' => 'Пожалуйста выберите день.'],
-            ['birthMonth', 'in', 'range' => [1,2,3,4,5,6,7,8,9,10,11,12], 'message' => 'Пожалуйста выберите месяц.'],
-            ['birthYear', 'in', 'range' => $this->getBirthYears(), 'message' => 'Пожалуйста выберите год.'],
             [['email'], 'unique'],
             ['phone', 'match', 'pattern' => '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/u', 'message' => 'Неверный формат номера телефона.'],
         ];
@@ -224,65 +208,6 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->auth_key === $auth_key;
     }
 
-
-    public function getBirthDays()
-    {
-        $array = [0 => 'День'];
-        for ($i = 1; $i <= 31; $i++) {
-            $array[$i] = $i;
-        }
-
-        return $array;
-    }
-
-    public function getNumberToMonth()
-    {
-        $array = array();
-        $array['01'] = 'Январь';
-        $array['02'] = 'Февраль';
-        $array['03'] = 'Март';
-        $array['04'] = 'Апрель';
-        $array['05'] = 'Май';
-        $array['06'] = 'Июнь';
-        $array['07'] = 'Июль';
-        $array['08'] = 'Август';
-        $array['09'] = 'Сентябрь';
-        $array['10'] = 'Октябрь';
-        $array['11'] = 'Ноябрь';
-        $array['12'] = 'Декабрь';
-
-        return $array;
-    }
-
-    public function getBirthMonths()
-    {
-        $array = [0 => 'Месяц'];
-        foreach ($this->getNumberToMonth() as $val) {
-            $array[$val] = $val;
-        }
-
-        return $array;
-    }
-
-    public function getDistricts()
-    {
-        $array = [0 => 'Регоин проживания'];
-        foreach (BioDistrict::find()->where([])->asArray()->all() as $district) {
-            $array[$district['dist_name']] = $district['dist_name'];
-        }
-        return $array;
-    }
-
-    public function getBirthYears()
-    {
-        $array = [0 => 'Год'];
-        for ($i = (int)gmdate('Y'); $i >= 1900; $i--) {
-            $array[$i] = $i;
-        }
-
-        return $array;
-    }
-
     public static function getUserInfoById($user_id)
     {
         $user = BioUser::findByUserId($user_id);
@@ -291,7 +216,7 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         if ($user->type == 'pacient') {
             $pacient = BioUserPacient::findByUserId($user->id);
             $result['pacient_info'] = $pacient->attributes;
-            $dist = BioDistrict::find()->where(['dist_code' => $pacient->district_code])->one();
+            $dist = BioDistrict::find()->where(['dist_code' => $pacient->district_code])->asArray()->one();
             if(!empty($dist)){
                 $result['pacient_info']['district_name'] = $dist->dist_name;
             }
