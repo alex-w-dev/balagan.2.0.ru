@@ -58,8 +58,8 @@ class RegistrationForm extends Model
         return [
             // username and password are both required ^$
             [['phone', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'name', 'surname'], 'required', 'message' => 'Поле не должно быть пустым'],
-            [['license'], 'required', 'on' => self::SCENARIO_DOCTOR],
-            [['district_code'], 'required', 'on' => self::SCENARIO_PACIENT],
+            [['license'], 'required', 'on' => self::SCENARIO_DOCTOR, 'message' => 'Поле не должно быть пустым'],
+            [['district_code'], 'required', 'on' => self::SCENARIO_PACIENT, 'message' => 'Поле не должно быть пустым'],
             ['male', 'required', 'message' => 'Выберите пол.'],
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
@@ -72,6 +72,7 @@ class RegistrationForm extends Model
             ['rememberMe', 'boolean'],
             // the email attribute should be a valid email address
             ['email', 'email', 'message' => 'Введите реальный E-Mail'],
+            [['email'], 'unique', 'message' => 'Пользователь с данным E-Mail был зарегистрирован ранее.'],
             ['phone', 'match', 'pattern' => '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/u', 'message' => 'Неверный формат номера телефона.'],
             // password is validated by validatePassword()
             /*['password', 'validatePassword'],*/

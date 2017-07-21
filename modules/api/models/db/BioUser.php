@@ -65,12 +65,12 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'phone', 'passwd', 'type', 'created', 'updated', 'name', 'surname'], 'required'],
+            [['email', 'phone', 'passwd', 'type', 'created', 'updated', 'name', 'surname'], 'required', 'message' => 'Поле не должно быть пустым'],
             [['status', 'created', 'updated'], 'integer'],
             [['email'], 'string', 'max' => 100],
             [['passwd', 'type', 'auth_key', 'path_key'], 'string', 'max' => 45],
             [['access_token', 'patronymic', 'surname'], 'string', 'max' => 255],
-            [['email'], 'unique'],
+            [['email'], 'unique', 'message' => 'Пользователь с данным E-Mail был зарегистрирован ранее.'],
             ['phone', 'match', 'pattern' => '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/u', 'message' => 'Неверный формат номера телефона.'],
         ];
     }
