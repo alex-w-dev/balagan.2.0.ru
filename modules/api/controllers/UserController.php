@@ -90,7 +90,26 @@ class UserController extends _ApiController
         $scenario = Yii::$app->request->post('type') == 'doctor' ? 'doctor' : 'pacient';
         $model = new RegistrationForm(['scenario' => $scenario]);
         $model->setAttributes(Yii::$app->request->post());
-        if ($model->validate() && $model->register()) {
+
+        $time = time();
+        $user = new BioUser();
+        $user->setAttributes([
+            'email' => $model->email,
+            'name' => $model->name,
+            'patronymic' => $model->patronymic,
+            'surname' => $model->surname,
+            'phone' => $model->phone,
+            'passwd' => md5($model->password),
+            'type' => $model->type,
+            'status' => 1,
+            'created' => $time,
+            'updated' => $time,
+            'auth_key' => uniqid("", rand(1000, 9999)),
+            'access_token' => md5(md5(uniqid(rand(), 1)) . md5($model->email)),
+            'path_key' => md5($model->email),
+        ]);
+
+        if ($model->validate() && $user->validate() && $model->register()) {
             return [
                 'success' => true,
                 'result' => $model->getUserInfo(),
@@ -98,7 +117,7 @@ class UserController extends _ApiController
         } else {
             return [
                 'success' => false,
-                'result' => $model->getErrors(),
+                'result' => array_merge($model->getErrors(), $user->getErrors())
             ];
         }
     }
@@ -108,7 +127,8 @@ class UserController extends _ApiController
         if (!empty($this->user)) {
             $scenario = $this->user->type == 'doctor' ? 'doctor' : 'pacient';
             $model = new RegistrationForm(['scenario' => $scenario]);
-            if($model->updateUserById($this->user->id, Yii::$app->request->post())){
+            $model->setAttributes(Yii::$app->request->post());
+            if($model->validate() && $model->updateUserById($this->user->id, Yii::$app->request->post())){
                 return [
                     'success' => true,
                     'result' => $this->user->getUserInfoById($this->user->id),
@@ -116,7 +136,7 @@ class UserController extends _ApiController
             } else {
                 return [
                     'success' => false,
-                    'result' => $this->user->getErrors(),
+                    'result' => $model->getErrors(),
                 ];
             }
 

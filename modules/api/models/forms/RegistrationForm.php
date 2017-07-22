@@ -72,7 +72,7 @@ class RegistrationForm extends Model
             ['rememberMe', 'boolean'],
             // the email attribute should be a valid email address
             ['email', 'email', 'message' => 'Введите реальный E-Mail'],
-            [['email'], 'unique', 'message' => 'Пользователь с данным E-Mail был зарегистрирован ранее.'],
+           // [['email'], 'unique', 'message' => 'Пользователь с данным E-Mail был зарегистрирован ранее.'],
             ['phone', 'match', 'pattern' => '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/u', 'message' => 'Неверный формат номера телефона.'],
             // password is validated by validatePassword()
             /*['password', 'validatePassword'],*/

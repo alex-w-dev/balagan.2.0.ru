@@ -4,17 +4,17 @@ $postdata = array(
     'surname' => 'asdasd',
     'password' => 'pat2',
     'phone' => '89529230181',
-    'email' => 'pat2@pat2.pat2',
+    'email' => 'pat2@pa4t2.pat2',
     'male' => 1,
     'birthDay' => 18,
     'birthMonth' => 7,
     'birthYear' => 1988,
-    'token' => '7ab782c32193ad9e8f5bdd771600b39c',
+    'token' => '6c05331c122d93edb3e15431cb7d7ac6',
     'type' => 'pacient',
     'district_code' => 1101000000
      );
 
-$filePath = realpath('7.jpg');
+$filePath = realpath('8.jpg');
 
 /*$postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',
@@ -26,11 +26,11 @@ $filePath = realpath('7.jpg');
 );*/
 
 /*$postdata = array(
-    'token' => '7ab782c32193ad9e8f5bdd771600b39c',
-    'pacient_id' => 18,
-    'doctor_id' => 19,
+    'token' => '6c05331c122d93edb3e15431cb7d7ac6',
+    //'pacient_id' => 18,
+    //'doctor_id' => 19,
     //'enabled' => 'all'
-    //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
+    'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
 );*/
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
