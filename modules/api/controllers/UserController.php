@@ -125,7 +125,7 @@ class UserController extends _ApiController
     public function actionEdituser()
     {
         if (!empty($this->user)) {
-            $scenario = $this->user->type == 'doctor' ? 'doctor' : 'pacient';
+            $scenario = $this->user->type == 'doctor' ? 'doctor_edit' : 'pacient_edit';
             $model = new RegistrationForm(['scenario' => $scenario]);
             $model->setAttributes(Yii::$app->request->post());
             if($model->validate() && $model->updateUserById($this->user->id, Yii::$app->request->post())){
@@ -574,7 +574,7 @@ class UserController extends _ApiController
     public function actionFindUsersByFio()
     {
         if (!empty($this->user)) {
-            $sql = "SELECT bu.id FROM bio_user bu WHERE CONCAT_WS(' ',bu.surname, bu.name, bu.patronymic) LIKE '%" . Yii::$app->request->post('find') . "%' AND bu.type='pacient'";
+            $sql = "SELECT bu.id FROM bio_user bu WHERE (CONCAT_WS(' ',bu.surname, bu.name, bu.patronymic) LIKE '%" . Yii::$app->request->post('find') . "%' OR bu.id='" . Yii::$app->request->post('find'). "') AND bu.type='pacient'";
             $search = BioUser::findBySql($sql)->all();
             $result = [];
             if(!empty($search)){

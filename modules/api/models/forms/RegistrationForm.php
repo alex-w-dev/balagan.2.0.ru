@@ -41,12 +41,16 @@ class RegistrationForm extends Model
 
     const SCENARIO_DOCTOR = 'doctor';
     const SCENARIO_PACIENT = 'pacient';
+    const SCENARIO_PACIENT_EDIT = 'pacient_edit';
+    const SCENARIO_DOCTOR_EDIT = 'doctor_edit';
 
     public function scenarios()
     {
         return [
             self::SCENARIO_DOCTOR => ['license', 'phone', 'name', 'surname', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_PACIENT => ['district_code', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_PACIENT_EDIT => ['district_code', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_DOCTOR_EDIT => ['license', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
         ];
     }
 
@@ -58,8 +62,8 @@ class RegistrationForm extends Model
         return [
             // username and password are both required ^$
             [['phone', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'name', 'surname'], 'required', 'message' => 'Поле не должно быть пустым'],
-            [['license'], 'required', 'on' => self::SCENARIO_DOCTOR, 'message' => 'Поле не должно быть пустым'],
-            [['district_code'], 'required', 'on' => self::SCENARIO_PACIENT, 'message' => 'Поле не должно быть пустым'],
+            [['license'], 'required', 'on' => [self::SCENARIO_DOCTOR, self::SCENARIO_DOCTOR_EDIT], 'message' => 'Поле не должно быть пустым'],
+            [['district_code'], 'required', 'on' => [self::SCENARIO_PACIENT, self::SCENARIO_PACIENT_EDIT], 'message' => 'Поле не должно быть пустым'],
             ['male', 'required', 'message' => 'Выберите пол.'],
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
@@ -235,7 +239,7 @@ class RegistrationForm extends Model
                 $doctor->update();
             }
 
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return true;
         }
 
         return false;
