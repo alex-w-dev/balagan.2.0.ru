@@ -200,7 +200,7 @@ class UserController extends _ApiController
                 $existing->save();
 
                 $notice = new BioUserNotice();
-                $notice->user_id = $this->user->id;
+                $notice->user_id = $this->user->id == Yii::$app->request->post('pacient_id') ? Yii::$app->request->post('doctor_id') : Yii::$app->request->post('pacient_id');
                 $notice->read = 0;
                 $notice->notice_type_id = 1;
                 $notice->c_time = new \yii\db\Expression('NOW()');
@@ -224,7 +224,7 @@ class UserController extends _ApiController
                 $model->save();
 
                 $notice = new BioUserNotice();
-                $notice->user_id = $this->user->id;
+                $notice->user_id = $this->user->id == Yii::$app->request->post('pacient_id') ? Yii::$app->request->post('doctor_id') : Yii::$app->request->post('pacient_id');
                 $notice->read = 0;
                 $notice->notice_type_id = 1;
                 $notice->c_time = new \yii\db\Expression('NOW()');
