@@ -29,6 +29,7 @@ $filePath = realpath('8.jpg');
 $postdata = array(
     'token' => 'adb4d3871eeeaf17b5d98002676c2d68',
     'find' => '23',
+    'email' => 'panov@webmedved.ru'
     //'pacient_id' => 18,
     //'doctor_id' => 19,
     //'enabled' => 'all'
@@ -37,9 +38,9 @@ $postdata = array(
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/find-users-by-fio';
+$url = 'settings/delete-user-by-email';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
