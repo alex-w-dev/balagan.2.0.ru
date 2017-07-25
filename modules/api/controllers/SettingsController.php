@@ -94,4 +94,18 @@ class SettingsController extends _ApiController
             ];
         }
     }
+
+    public function actionDeleteUserByEmail()
+    {
+        $user = BioUser::findByEmail(Yii::$app->request->post('email'));
+        if($user->delete()){
+            return [
+                'success' => true,
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
+    }
 }
