@@ -10,7 +10,7 @@ $postdata = array(
     'birthMonth' => 7,
     'birthYear' => 1988,
     'token' => 'adb4d3871eeeaf17b5d98002676c2d68',
-    //'type' => 'pacient',
+    'type' => 'pacient',
     'district_code' => 1101000000,
     'license' => '12312371892371231'
      );
@@ -27,7 +27,9 @@ $filePath = realpath('8.jpg');
 );*/
 
 $postdata = array(
-    'token' => 'adb4d3871eeeaf17b5d98002676c2d68',
+    'token' => 'c927b5e365f37f23dee40bed464f9e53',
+    'mixed' => true,
+    'id_parent' => 800,
     'find' => '23',
     'email' => 'panov@webmedved.ru'
     //'pacient_id' => 18,
@@ -38,9 +40,9 @@ $postdata = array(
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'settings/delete-user-by-email';
+$url = 'account/anketa';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);

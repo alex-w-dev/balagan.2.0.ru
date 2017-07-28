@@ -6,6 +6,7 @@ use app\modules\api\models\db\BioDistrict;
 use app\modules\api\models\db\BioUser;
 use app\modules\api\models\db\BioUserPacient;
 use app\modules\api\models\db\BioUserDoctor;
+use app\modules\api\models\db\BioUserPartner;
 use Yii;
 use yii\base\Model;
 
@@ -41,8 +42,10 @@ class RegistrationForm extends Model
 
     const SCENARIO_DOCTOR = 'doctor';
     const SCENARIO_PACIENT = 'pacient';
+    const SCENARIO_PARTNER = 'partner';
     const SCENARIO_PACIENT_EDIT = 'pacient_edit';
     const SCENARIO_DOCTOR_EDIT = 'doctor_edit';
+    const SCENARIO_PARTNER_EDIT = 'partner_edit';
 
     public function scenarios()
     {
@@ -51,6 +54,8 @@ class RegistrationForm extends Model
             self::SCENARIO_PACIENT => ['district_code', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_PACIENT_EDIT => ['district_code', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_DOCTOR_EDIT => ['license', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_PARTNER => ['phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_PARTNER_EDIT => ['phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
         ];
     }
 
@@ -140,11 +145,8 @@ class RegistrationForm extends Model
         }
 
         if ($user->validate()) {
-
             $birthString = str_pad($this->birthDay, 2, '0', STR_PAD_LEFT) . '.' . str_pad($this->birthMonth, 2, '0', STR_PAD_LEFT) . '.' . $this->birthYear;
             $birthUnix = strtotime($birthString . " UTC");
-            //$result = BioDistrict::find()->where(['dist_name' => $this->district_name])->asArray()->one();
-            //$districtCode = empty($result['dist_code']) ? 1100000000 : $result['dist_code'];
 
             if ($this->user_id) {
                 $pacient = BioUserPacient::findOne(['user_id' => $this->user_id]);
@@ -190,6 +192,18 @@ class RegistrationForm extends Model
                         return false;
                     }
                     $doctor->save();
+                } elseif ($user->type == 'partner'){
+                    $partner = new BioUserPartner();
+                    $partner->setAttributes([
+                        'user_id' => $user->id,
+                    ]);
+                    if (!$partner->validate()) {
+                        if (!$this->user_id) {
+                            BioUser::deleteAll(['id' => $user->id]);
+                        }
+                        return false;
+                    }
+                    $partner->save();
                 }
             }
 
@@ -237,6 +251,12 @@ class RegistrationForm extends Model
                     'license' => $this->license,
                 ]);
                 $doctor->update();
+            } elseif ($user->type == 'partner'){
+                $partner = BioUserPartner::findOne(['user_id' => $id]);
+               /* $doctor->setAttributes([
+                    'license' => $this->license,
+                ]);*/
+                $partner->update();
             }
 
             return true;

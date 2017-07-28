@@ -233,6 +233,10 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
             $doctor = BioUserDoctor::findByUserId($user->id);
             $result['doctor_info'] = $doctor->attributes;
         }
+        if ($user->type == 'partner') {
+            $partner = BioUserPartner::findByUserId($user->id);
+            $result['partner_info'] = $partner->attributes;
+        }
 
         return $result;
     }
