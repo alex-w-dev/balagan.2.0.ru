@@ -41,4 +41,8 @@ class BioDoctorPacientConnection extends \yii\db\ActiveRecord
         return self::find()->where(['pacient_id'=>$this->pacient_id])->andWhere(['doctor_id'=>$this->doctor_id])->one();
     }
 
+    public static function findDoctorByPacient($pacient_id){
+        return self::find()->where(['pacient_id'=>$pacient_id])->one();
+    }
+
 }

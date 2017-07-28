@@ -54,9 +54,9 @@ class BioUserMeasure extends \yii\db\ActiveRecord
         return $value;
     }
 
-    public static function setValue($data){
+    public static function setValue($user_id, $data){
         $t = new self();
-        $t->deleteAll(['user_id'=>$data['user_id'], 'measure_id'=>$data['measure_id']]);
+        $t->deleteAll(['user_id'=>$user_id, 'measure_id'=>$data['measure_id']]);
 
         if(!$data['value'])return;
 
