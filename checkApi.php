@@ -27,7 +27,16 @@ $filePath = realpath('8.jpg');
 );*/
 
 $postdata = array(
-    'token' => 'c927b5e365f37f23dee40bed464f9e53',
+    'token' => '4b37daa9c5ba3577827280a34919bd16',
+    'user_id' => 18,
+    'measure_data' =>json_encode(
+        [['type_value' => 2,
+        'value' => '234',
+        'measure_id' => 11290],
+        ['type_value' => 2,
+            'value' => 'нет',
+            'measure_id' => 11289
+        ]]),
     'mixed' => true,
     'id_parent' => 800,
     'find' => '23',

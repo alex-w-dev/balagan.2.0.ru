@@ -45,11 +45,11 @@ class AccountController extends _ApiController
     public function actionSetTestsResultsForPartners()
     {
         if (!empty($this->user) && $this->user->type == 'partner') {
-            $data = Yii::$app->request->post('measure_data');
+            $data = json_decode(Yii::$app->request->post('measure_data'), true);
             $user_id = Yii::$app->request->post('user_id');
             if (count($data)) {
                 foreach ($data as $v) {
-                    $measure = BioMeasure::findOne(['measure_id' => $v['measure_id']]);
+                    $measure = BioMeasure::findOne(['id_measure' => $v['measure_id']]);
                     if($measure && $measure->id_parent == 800){
                         BioUserMeasure::setValue($user_id, $v);
                     }
@@ -72,7 +72,7 @@ class AccountController extends _ApiController
                     $notice->c_time = new \yii\db\Expression('NOW()');
                     $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'pacient_id' => $user_id]);
                     $notice->save();
-                }   
+                }
 
                 return [
                     'success' => true,

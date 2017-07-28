@@ -65,6 +65,7 @@ class BioUserMeasure extends \yii\db\ActiveRecord
         }
 
         $t->setAttributes($data);
+        $t->user_id = $user_id;
         $t->save();
     }
 
