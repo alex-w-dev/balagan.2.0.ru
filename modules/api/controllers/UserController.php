@@ -87,7 +87,19 @@ class UserController extends _ApiController
 
     public function actionRegister()
     {
-        $scenario = Yii::$app->request->post('type') == 'doctor' ? 'doctor' : 'pacient';
+        switch (Yii::$app->request->post('type')){
+            case 'doctor':
+                $scenario = 'doctor';
+                break;
+            case 'pacient':
+                $scenario = 'pacient';
+                break;
+            case 'partner':
+                $scenario = 'partner';
+                break;
+            default:
+                $scenario = 'pacient';
+        }
         $model = new RegistrationForm(['scenario' => $scenario]);
         $model->setAttributes(Yii::$app->request->post());
 
@@ -125,7 +137,19 @@ class UserController extends _ApiController
     public function actionEdituser()
     {
         if (!empty($this->user)) {
-            $scenario = $this->user->type == 'doctor' ? 'doctor_edit' : 'pacient_edit';
+            switch (Yii::$app->request->post('type')){
+                case 'doctor':
+                    $scenario = 'doctor_edit';
+                    break;
+                case 'pacient':
+                    $scenario = 'pacient_edit';
+                    break;
+                case 'partner':
+                    $scenario = 'partner_edit';
+                    break;
+                default:
+                    $scenario = 'pacient_edit';
+            }
             $model = new RegistrationForm(['scenario' => $scenario]);
             $model->setAttributes(Yii::$app->request->post());
             if($model->validate() && $model->updateUserById($this->user->id, Yii::$app->request->post())){
