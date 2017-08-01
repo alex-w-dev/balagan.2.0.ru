@@ -43,28 +43,32 @@ class BioUserPacient extends \yii\db\ActiveRecord
     public static function getPacientAge($user, $format){
         if(is_numeric($user)){
             $user = self::findByUserId($user);
+            if(!empty($user)){
+                $diff = date_diff(new \DateTime($user->birthString), new \DateTime());
+                switch ($format){
+                    case 'years':
+                        return $diff->y;
+                        break;
+                    case 'months':
+                        return $diff->y * 12 + $diff->m;
+                        break;
+                    default:
+                        return $diff->$format;
+                }
+            }
         }
-
-        $diff = date_diff(new \DateTime($user->birthString), new \DateTime());
-        switch ($format){
-            case 'years':
-                return $diff->y;
-                break;
-            case 'months':
-                return $diff->y * 12 + $diff->m;
-                break;
-            default:
-                return $diff->$format;
-        }
+        return false;
     }
 
     /* $user  = pacient_id | BioUserPacient */
     public static function getPacientMale($user){
         if(is_numeric($user)){
             $user = self::findByUserId($user);
+            if(!empty($user)){
+                return $user->male;
+            }
         }
-
-        return $user->male;
+        return false;
     }
 
     /**

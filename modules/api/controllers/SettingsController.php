@@ -6,6 +6,7 @@ use Yii;
 use app\modules\api\models\db\BioUser;
 use app\modules\api\models\db\BioUserDoctor;
 use app\modules\api\models\db\BioUserPacient;
+use app\modules\api\models\db\BioUserPartner;
 use app\modules\api\models\db\BioDistrict;
 
 class SettingsController extends _ApiController
@@ -79,6 +80,25 @@ class SettingsController extends _ApiController
     public function actionAllPacients()
     {
         $all = BioUserPacient::find()->all();
+        if(count($all) > 0){
+            $result = [];
+            foreach ($all as $one){
+                $result[$one->user_id] = BioUser::getUserInfoById($one->user_id);
+            }
+            return [
+                'success' => true,
+                'result' => $result
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
+    }
+
+    public function actionAllPartners()
+    {
+        $all = BioUserPartner::find()->all();
         if(count($all) > 0){
             $result = [];
             foreach ($all as $one){
