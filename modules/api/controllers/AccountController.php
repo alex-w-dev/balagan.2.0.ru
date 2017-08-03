@@ -100,7 +100,7 @@ class AccountController extends _ApiController
             ];
 
             /* отображать вопросы смешанно , или строго раздельно группы от вопросов*/
-            $MIXED = Yii::$app->request->post('mixed');
+            $MIXED =  !empty(Yii::$app->request->post('mixed')) ? Yii::$app->request->post('mixed') : false;
             $id_parent = !empty(Yii::$app->request->post('id_parent')) ? Yii::$app->request->post('id_parent') : 0;
             $data = [];
 
@@ -110,6 +110,7 @@ class AccountController extends _ApiController
 
             $questions = array();
             /* сэкономим ресурсы сервера */
+
             if (!$groups && !$MIXED) {
                 $mQuestions = new BioMeasure();
                 /* получим вопросы */
