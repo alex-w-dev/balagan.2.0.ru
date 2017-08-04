@@ -50,7 +50,7 @@ class AccountController extends _ApiController
             if (count($data)) {
                 foreach ($data as $v) {
                     $measure = BioMeasure::findOne(['id_measure' => $v['measure_id']]);
-                    if($measure && $measure->id_parent == 800){
+                    if($measure){
                         BioUserMeasure::setValue($user_id, $v);
                     }
                 }

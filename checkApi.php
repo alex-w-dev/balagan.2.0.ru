@@ -27,18 +27,12 @@ $filePath = realpath('8.jpg');
 );*/
 
 $postdata = array(
-    'token' => '4b37daa9c5ba3577827280a34919bd16',
-    'user_id' => 18,
-    'measure_data' =>json_encode(
-        [['type_value' => 2,
-        'value' => '234',
-        'measure_id' => 11290],
-        ['type_value' => 2,
-            'value' => 'нет',
-            'measure_id' => 11289
-        ]]),
-    'mixed' => true,
-    'id_parent' => 800,
+    //'token' => '4b37daa9c5ba3577827280a34919bd16',
+    'token' => 'ceda0c7725ee32404c0a5812f513d8c5',
+    'user_id' => 35,
+    'measure_data' =>'[{"type_value":"1","value":"","measure_id":"1329"},{"type_value":"1","value":"","measure_id":"1340"},{"type_value":"1","value":"","measure_id":"1341"},{"type_value":"1","value":"","measure_id":"1342"},{"type_value":"1","value":"","measure_id":"1343"},{"type_value":"1","value":"","measure_id":"1344"},{"type_value":"1","value":"","measure_id":"1345"},{"type_value":"1","value":"","measure_id":"1346"},{"type_value":"1","value":"","measure_id":"1347"},{"type_value":"1","value":"","measure_id":"1339"},{"type_value":"1","value":"","measure_id":"1338"},{"type_value":"1","value":"","measure_id":"1330"},{"type_value":"1","value":"","measure_id":"1331"},{"type_value":"1","value":"","measure_id":"1332"},{"type_value":"1","value":"","measure_id":"1333"},{"type_value":"1","value":"","measure_id":"1334"},{"type_value":"1","value":"","measure_id":"1335"},{"type_value":"1","value":"123","measure_id":"1336"},{"type_value":"1","value":"321","measure_id":"1337"},{"type_value":"1","value":"123","measure_id":"1348"}]',
+    //'mixed' => false,
+    'id_parent' => 846,
     'find' => '23',
     'email' => 'panov@webmedved.ru'
     //'pacient_id' => 18,
@@ -49,9 +43,9 @@ $postdata = array(
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'account/set-tests-results-for-partners';
+$url = 'settings/all-pacients';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
