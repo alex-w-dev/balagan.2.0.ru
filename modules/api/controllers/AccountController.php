@@ -60,8 +60,6 @@ class AccountController extends _ApiController
                     }
                 }
 
-
-
                 $notice = new BioUserNotice();
                 $notice->user_id = $user_id;
                 $notice->read = 0;
