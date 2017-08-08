@@ -48,19 +48,26 @@ class AccountController extends _ApiController
             $data = json_decode(Yii::$app->request->post('measure_data'), true);
             $user_id = Yii::$app->request->post('user_id');
             if (count($data)) {
+                $i = 1;
                 foreach ($data as $v) {
                     $measure = BioMeasure::findOne(['id_measure' => $v['measure_id']]);
+                    if($i == 1){
+                        $tests_name = BioMeasure::findOne(['id_measure' => $measure->id_parent]);
+                    }
+                    $i++;
                     if($measure){
                         BioUserMeasure::setValue($user_id, $v);
                     }
                 }
+
+
 
                 $notice = new BioUserNotice();
                 $notice->user_id = $user_id;
                 $notice->read = 0;
                 $notice->notice_type_id = 4;
                 $notice->c_time = new \yii\db\Expression('NOW()');
-                $notice->extra_data = json_encode(['partner_id' => $this->user->id]);
+                $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']);
                 $notice->save();
 
                 $connection = BioDoctorPacientConnection::findDoctorByPacient($user_id);
@@ -70,7 +77,7 @@ class AccountController extends _ApiController
                     $notice->read = 0;
                     $notice->notice_type_id = 4;
                     $notice->c_time = new \yii\db\Expression('NOW()');
-                    $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'pacient_id' => $user_id]);
+                    $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'pacient_id' => $user_id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']);
                     $notice->save();
                 }
 
