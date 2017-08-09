@@ -69,6 +69,7 @@ class RegistrationForm extends Model
             [['phone', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'name', 'surname'], 'required', 'message' => 'Поле не должно быть пустым'],
             [['license'], 'required', 'on' => [self::SCENARIO_DOCTOR, self::SCENARIO_DOCTOR_EDIT], 'message' => 'Поле не должно быть пустым'],
             [['district_code'], 'required', 'on' => [self::SCENARIO_PACIENT, self::SCENARIO_PACIENT_EDIT], 'message' => 'Поле не должно быть пустым'],
+            [['district_code'],  'compare', 'compareValue' => 100000000, 'operator' => '>=', 'on' => [self::SCENARIO_PACIENT, self::SCENARIO_PACIENT_EDIT], 'message' => 'Поле не должно быть пустым'],
             ['male', 'required', 'message' => 'Выберите пол.'],
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
