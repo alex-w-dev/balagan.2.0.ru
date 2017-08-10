@@ -99,7 +99,7 @@ class AccountController extends _ApiController
         if (!empty($this->user)){
             $pacient = BioUserPacient::findByUserId($this->user->id);
             $questionOptions = [
-                'user_id' => Yii::$app->user->getId(),
+                'user_id' => $this->user->id,
                 'male' => BioUserPacient::getPacientMale($pacient),
                 'age' => BioUserPacient::getPacientAge($pacient, 'months')
             ];
