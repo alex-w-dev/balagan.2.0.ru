@@ -50,7 +50,7 @@ class LoginForm extends Model
             $user = BioUser::findByEmail($this->email);
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Неверное логин или пароль.');
+                $this->addError($attribute, 'Неверный логин или пароль.');
             }
         }
     }
