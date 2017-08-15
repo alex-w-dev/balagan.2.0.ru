@@ -174,7 +174,7 @@ class AccountController extends _ApiController
 
         $measure = new BioMeasure();
         foreach ($groups as $index => $group) {
-            $groups[$index]['answered'] = $measure->groupQuestionCountAnswered($group['id_measure'], Yii::$app->user->getId());
+            $groups[$index]['answered'] = $measure->groupQuestionCountAnswered($group['id_measure'], $this->user->id);
             $groups[$index]['answered']['proc'] = round(
                 $groups[$index]['answered']['answered'] / $groups[$index]['answered']['need'] * 100
             );
@@ -211,6 +211,8 @@ class AccountController extends _ApiController
             'prev_group' => $prev_group
         ];
     }
+
+
 
     // пока эту штуку не делаю
     /* THIS ACTION IS ON TESTING MODE */
