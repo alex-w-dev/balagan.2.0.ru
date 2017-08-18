@@ -60,13 +60,15 @@ class AccountController extends _ApiController
                     }
                 }
 
-                $notice = new BioUserNotice();
-                $notice->user_id = $user_id;
-                $notice->read = 0;
-                $notice->notice_type_id = 4;
-                $notice->c_time = new \yii\db\Expression('NOW()');
-                $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']);
-                $notice->save();
+                if($this->user->type == 'partner'){
+                    $notice = new BioUserNotice();
+                    $notice->user_id = $user_id;
+                    $notice->read = 0;
+                    $notice->notice_type_id = 4;
+                    $notice->c_time = new \yii\db\Expression('NOW()');
+                    $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']);
+                    $notice->save();
+                }
 
                 $connection = BioDoctorPacientConnection::findDoctorByPacient($user_id);
                 if($connection){
@@ -75,7 +77,8 @@ class AccountController extends _ApiController
                     $notice->read = 0;
                     $notice->notice_type_id = 4;
                     $notice->c_time = new \yii\db\Expression('NOW()');
-                    $notice->extra_data = json_encode(['partner_id' => $this->user->id, 'pacient_id' => $user_id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']);
+                    $notice->extra_data = $this->user->type == 'partner' ? json_encode(['partner_id' => $this->user->id, 'pacient_id' => $user_id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']) :
+                        json_encode(['pacient_id' => $user_id, 'tests_name' => !empty($tests_name) ? $tests_name->name : '']);
                     $notice->save();
                 }
 
