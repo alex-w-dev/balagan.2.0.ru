@@ -96,8 +96,13 @@ class BioMeasure extends \yii\db\ActiveRecord
             ->asArray()
             ->all();
 
+        $i = 1;
         foreach ($questions as $index => $question) {
             $questions[$index]['value'] = BioUserMeasure::getValue($question['id_measure'], $options['user_id']);
+            /*if(!empty($questions[$index]['value'])){
+                echo $question['id_measure'];
+                echo '<br/>';
+            }*/
             $questions[$index]['values'] = BioValueNominal::find()
                 ->where(['id_measure' => $question['id_measure']])
                 ->orderBy(['sort_order' => SORT_ASC])
@@ -108,7 +113,6 @@ class BioMeasure extends \yii\db\ActiveRecord
             $questions[$index]['children'] = $this->groupGuestions($question['id_measure'], $options);
             //}
         }
-
 
         return $questions;
     }
@@ -158,34 +162,15 @@ class BioMeasure extends \yii\db\ActiveRecord
         return $this->findNeighborOfMeasure($measure, $options, '<', SORT_DESC);
     }
 
-
-
-
     public function groupQuestionCountAnswered($id_measure, $user_id, $return = ['need' => 0, 'answered' => 0])
     {
-        /*  NOT measure_children BD version
-         * $questions = BioMeasure::find()->where(['id_parent'=>$id_measure])->asArray()->all();
-
-        foreach ($questions as $index => $question){
-            $value = BioUserMeasure::getValue($question['id_measure'], $user_id);
-            $return['need']++;
-            if($value){
-                $return['answered']++;
-            }
-
-            $r = $this->groupGuestions($question['id_measure'], $user_id);
-            $return['need'] += $r['need'];
-            $return['answered'] += $r['answered'];
-        }*/
-        /*var_dump();
-        die();*/
         $children = BioMeasureChildren::find()->where(['id_measure' => $id_measure])->asArray()->one();
         $need_arr = explode(',', $children['children']);
+
         $return['need'] = count($need_arr);
         $data = (new \yii\db\Query())->select(['COUNT(*) as count'])->from(BioUserMeasure::tableName())->where(['user_id' => $user_id, 'measure_id' => $need_arr])->createCommand()->queryOne();
 
         $return['answered'] = $data['count'];
-
 
         return $return;
     }
