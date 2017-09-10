@@ -13,6 +13,9 @@ use yii\web\UploadedFile;
 use app\modules\api\models\BioFileHelper;
 use app\modules\api\models\db\BioNoticeTypes;
 use app\modules\api\models\db\BioUserNotice;
+use app\modules\api\models\db\BioClinicList;
+use app\modules\api\models\db\BioDoctorSchedule;
+use app\modules\api\models\db\BioRecordToDoctor;
 use Yii;
 use yii\imagine\Image;
 use Imagine\Image\Box;
@@ -618,6 +621,84 @@ class UserController extends _ApiController
                 ];
             }
 
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionCreateSchedule()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $schedule = new BioDoctorSchedule();
+                $schedule->setAttributes(Yii::$app->request->post());
+                $schedule->doctor_id = $this->user->id;
+                if ($schedule->validate()) {
+                    if($schedule->save()){
+                        $workTime = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
+                        $sessionCount = round($workTime / $schedule->reception_time);
+                        for ($i = 1; $i <= ($workTime / $sessionCount); $i++) {
+                            $session = new BioRecordToDoctor();
+                            $session->end_time = date('Y-m-d H:i:s', strtotime($schedule->start_time) + ($i * $schedule->reception_time * 60));
+                            $session->start_time = date('Y-m-d H:i:s', strtotime($session->end_time) - ($schedule->reception_time * 60));
+                            $session->schedule_id = $schedule->schedule_id;
+                            $session->save();
+                        }
+                        return [
+                            'success' => true,
+                            'result' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id)
+                        ];
+                    } else {
+                        return [
+                            'success' => false,
+                            'result' => 'Schedule does not exists'
+                        ];
+                    }
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => $schedule->getErrors(),
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission to make schedule'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function getDaySchedule()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $schedule = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date')])->one();
+                if(!empty($schedule)){
+                    return [
+                        'success' => true,
+                        'result' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id)
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => "You don't have schedule for this date"
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission'
+                ];
+            }
         } else {
             return [
                 'success' => false,

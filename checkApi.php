@@ -41,11 +41,21 @@ $postdata = array(
     //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
 );
 
+$postdata = array(
+    'token' => '9ef9fb3de13964f7abe65f9711c53c024fbf5ab4010d1385260767eb1f15d493',
+    'clinic_id' => 1,
+    'price' => 120,
+    'reception_date' => '2017-09-11',
+    'start_time' => '2017-09-11 11:00',
+    'end_time' => '2017-09-11 18:00',
+    'reception_time' => 30,
+);
+
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'settings/all-pacients';
+$url = 'user/create-schedule';
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
+curl_setopt($ch, CURLOPT_URL, 'http://biogenom.loc/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
