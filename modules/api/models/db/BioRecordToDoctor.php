@@ -2,6 +2,7 @@
 
 namespace app\modules\api\models\db;
 
+use app\models\db\BioUser;
 use Yii;
 
 class BioRecordToDoctor extends \yii\db\ActiveRecord
@@ -26,15 +27,47 @@ class BioRecordToDoctor extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getClinicNameByScheduleId($schedule_id)
+    {
+        $schedule = BioDoctorSchedule::find()->where(['schedule_id' =>$schedule_id])->one();
+        if($schedule){
+           $clinic = BioClinicList::find()->where(['clinic_id' => $schedule->clinic_id])->one();
+           if($clinic){
+               return $clinic->clinic_name;
+           }
+        }
+        return 'Не известно';
+    }
+
+    public static function getPriceByScheduleId($schedule_id)
+    {
+        $schedule = BioDoctorSchedule::find()->where(['schedule_id' =>$schedule_id])->one();
+        if($schedule){
+            return $schedule->price;
+        }
+        return 'Не известно';
+    }
+
     public static function getFullSchedule($schedule_id)
     {
         $schedule = self::find()->where(['schedule_id' =>$schedule_id])->all();
+        $clinic_name = self::getClinicNameByScheduleId($schedule_id);
+        $price = self::getPriceByScheduleId($schedule_id);
         $result = [];
         if(count($schedule) > 0) {
             foreach ($schedule as $record){
-                $result[$record->record_id]['start_time'] = $record->start_time;
+                if(!empty($record->pacient_id)){
+                    $user = BioUser::findByUserId($record->pacient_id);
+                    $pacient = $user->surname . ' ' . $user->name . ' ' . $user->patronymic;
+                } else {
+                    $pacient = "Нет записи";
+                }
+                $result[$record->record_id]['start_time'] = date('H:i', strtotime($record->start_time));
                 $result[$record->record_id]['end_time'] = $record->end_time;
                 $result[$record->record_id]['pacient_id'] = $record->pacient_id;
+                $result[$record->record_id]['clinic_name'] = $clinic_name;
+                $result[$record->record_id]['pacient_fio'] = $pacient;
+                $result[$record->record_id]['price'] = $price;
             }
         }
 

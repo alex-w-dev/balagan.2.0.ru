@@ -649,7 +649,10 @@ class UserController extends _ApiController
                         }
                         return [
                             'success' => true,
-                            'result' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id)
+                            'result' => [
+                                'schedule' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id),
+                                'info' => $schedule->attributes
+                            ]
                         ];
                     } else {
                         return [
@@ -677,7 +680,7 @@ class UserController extends _ApiController
         }
     }
 
-    public function getDaySchedule()
+    public function actionGetDaySchedule()
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
@@ -685,7 +688,10 @@ class UserController extends _ApiController
                 if(!empty($schedule)){
                     return [
                         'success' => true,
-                        'result' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id)
+                        'result' => [
+                            'schedule' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id),
+                            'info' => $schedule->attributes
+                        ]
                     ];
                 } else {
                     return [

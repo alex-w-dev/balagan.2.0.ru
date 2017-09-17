@@ -8,6 +8,7 @@ use app\modules\api\models\db\BioUserDoctor;
 use app\modules\api\models\db\BioUserPacient;
 use app\modules\api\models\db\BioUserPartner;
 use app\modules\api\models\db\BioDistrict;
+use app\modules\api\models\db\BioClinicList;
 
 class SettingsController extends _ApiController
 {
@@ -121,6 +122,25 @@ class SettingsController extends _ApiController
         if($user->delete()){
             return [
                 'success' => true,
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
+    }
+
+    public function actionGetClinicsList()
+    {
+        $all = BioClinicList::find()->all();
+        if(count($all) > 0){
+            $result = [];
+            foreach ($all as $one){
+                $result[$one->clinic_id] = $one->attributes;
+            }
+            return [
+                'success' => true,
+                'result' => $result
             ];
         } else {
             return [
