@@ -629,6 +629,94 @@ class UserController extends _ApiController
         }
     }
 
+    public function actionDeleteSchedule()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $schedule = BioDoctorSchedule::deleteAll(['reception_date' => Yii::$app->request->post('reception_date')]);
+                if($schedule){
+                    return [
+                        'success' => true,
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => "You don't have schedule for this date"
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionEditSchedule()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $schedule = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date')])->one();
+                if(!empty($schedule)){
+                    $schedule->setAttributes(Yii::$app->request->post());
+                    if ($schedule->validate()) {
+                        if($schedule->update()){
+                            BioRecordToDoctor::deleteAll(['schedule_id' =>$schedule->schedule_id]);
+                            $workTime = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
+                            $sessionCount = round($workTime / $schedule->reception_time);
+                            for ($i = 1; $i <= $sessionCount; $i++) {
+                                $session = new BioRecordToDoctor();
+                                $session->end_time = date('Y-m-d H:i:s', strtotime($schedule->start_time) + ($i * $schedule->reception_time * 60));
+                                $session->start_time = date('Y-m-d H:i:s', strtotime($session->end_time) - ($schedule->reception_time * 60));
+                                $session->schedule_id = $schedule->schedule_id;
+                                $session->save();
+                            }
+                            return [
+                                'success' => true,
+                                'result' => [
+                                    'schedule' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id),
+                                    'info' => $schedule->attributes
+                                ]
+                            ];
+                        } else {
+                            return [
+                                'success' => false,
+                                'result' => 'Schedule does not exists'
+                            ];
+                        }
+                    } else {
+                        return [
+                            'success' => false,
+                            'result' => $schedule->getErrors(),
+                        ];
+                    }
+
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => "You don't have schedule for this date"
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission to make schedule'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
     public function actionCreateSchedule()
     {
         if (!empty($this->user)) {
@@ -640,7 +728,7 @@ class UserController extends _ApiController
                     if($schedule->save()){
                         $workTime = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
                         $sessionCount = round($workTime / $schedule->reception_time);
-                        for ($i = 1; $i <= ($workTime / $sessionCount); $i++) {
+                        for ($i = 1; $i <= $sessionCount; $i++) {
                             $session = new BioRecordToDoctor();
                             $session->end_time = date('Y-m-d H:i:s', strtotime($schedule->start_time) + ($i * $schedule->reception_time * 60));
                             $session->start_time = date('Y-m-d H:i:s', strtotime($session->end_time) - ($schedule->reception_time * 60));
