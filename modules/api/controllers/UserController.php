@@ -633,7 +633,7 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
-                $schedule = BioDoctorSchedule::deleteAll(['reception_date' => Yii::$app->request->post('reception_date')]);
+                $schedule = BioDoctorSchedule::deleteAll(['schedule_id' => Yii::$app->request->post('schedule_id')]);
                 if($schedule){
                     return [
                         'success' => true,
@@ -662,7 +662,7 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
-                $schedule = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date')])->one();
+                $schedule = BioDoctorSchedule::find()->where(['schedule_id' => Yii::$app->request->post('schedule_id')])->one();
                 if(!empty($schedule)){
                     $schedule->setAttributes(Yii::$app->request->post());
                     if ($schedule->validate()) {
@@ -680,7 +680,6 @@ class UserController extends _ApiController
                             return [
                                 'success' => true,
                                 'result' => [
-                                    'schedule' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id),
                                     'info' => $schedule->attributes
                                 ]
                             ];
@@ -738,7 +737,6 @@ class UserController extends _ApiController
                         return [
                             'success' => true,
                             'result' => [
-                                'schedule' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id),
                                 'info' => $schedule->attributes
                             ]
                         ];
@@ -772,13 +770,24 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
-                $schedule = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date')])->one();
-                if(!empty($schedule)){
+                $schedules = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date')])->all();
+                if(!empty($schedules)){
+                    $schedule_ids = [];
+                    $info = [];
+                    if(count($schedules) > 0){
+                        foreach ($schedules as $schedule){
+                            $schedule_ids[] = $schedule->schedule_id;
+                            $info[$schedule->schedule_id] = $schedule->attributes;
+                            $info[$schedule->schedule_id]['clinic_name'] = BioRecordToDoctor::getClinicNameByScheduleId($schedule->schedule_id);
+                            $info[$schedule->schedule_id]['start_time_formated'] = date('H:i', strtotime($schedule->start_time));
+                            $info[$schedule->schedule_id]['end_time_formated'] = date('H:i', strtotime($schedule->end_time));
+                        }
+                    }
                     return [
                         'success' => true,
                         'result' => [
-                            'schedule' => BioRecordToDoctor::getFullSchedule($schedule->schedule_id),
-                            'info' => $schedule->attributes
+                            'schedule' => BioRecordToDoctor::getFullSchedule($schedule_ids),
+                            'info' => $info
                         ]
                     ];
                 } else {
