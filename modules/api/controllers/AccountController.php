@@ -104,7 +104,7 @@ class AccountController extends _ApiController
             $questionOptions = [
                 'user_id' => $this->user->id,
                 'male' => BioUserPacient::getPacientMale($pacient),
-                'age' => BioUserPacient::getPacientAge($pacient, 'months')
+                'age' => BioUserPacient::getPacientAge($pacient->user_id, 'months')
             ];
 
             /* отображать вопросы смешанно , или строго раздельно группы от вопросов*/
@@ -128,7 +128,7 @@ class AccountController extends _ApiController
             if ($MIXED) {
                 $data['anketa_groups'] = '';
                 if ($groups) {
-                    $data['anketa_groups'] = $this->dataAnketaQuestionGroups($groups, $id_parent);
+                    $data['anketa_groups'] = $this->dataAnketaQuestionGroups($groups, $questionOptions, $id_parent);
                 }
                 $data['anketa_questions'] = '';
                 if ($questions) {
@@ -139,7 +139,7 @@ class AccountController extends _ApiController
                     /* отображать как горуппы вопросов */
                     return [
                         'success' => true,
-                        'result' => $this->dataAnketaQuestionGroups($groups, $id_parent),
+                        'result' => $this->dataAnketaQuestionGroups($groups, $questionOptions, $id_parent),
                     ];
                 } elseif ($questions) {
                     /* отображать как вопросы */
@@ -170,14 +170,14 @@ class AccountController extends _ApiController
     }
 
     /* контроллер отображающий вопросы как ГРУППЫ ВОПРОСОВ */
-    public function dataAnketaQuestionGroups($groups, $id_parent = 0)
+    public function dataAnketaQuestionGroups($groups, $questionOptions, $id_parent = 0)
     {
         /* можно ли отправлять на расчет */
         $canSend = true;
 
         $measure = new BioMeasure();
         foreach ($groups as $index => $group) {
-            $groups[$index]['answered'] = $measure->groupQuestionCountAnswered($group['id_measure'], $this->user->id);
+            $groups[$index]['answered'] = $measure->groupQuestionCountAnswered($group['id_measure'], $questionOptions);
             $groups[$index]['answered']['proc'] = round(
                 $groups[$index]['answered']['answered'] / $groups[$index]['answered']['need'] * 100
             );

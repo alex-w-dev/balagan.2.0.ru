@@ -162,13 +162,22 @@ class BioMeasure extends \yii\db\ActiveRecord
         return $this->findNeighborOfMeasure($measure, $options, '<', SORT_DESC);
     }
 
-    public function groupQuestionCountAnswered($id_measure, $user_id, $return = ['need' => 0, 'answered' => 0])
+    public function groupQuestionCountAnswered($id_measure, $questionOptions, $return = ['need' => 0, 'answered' => 0])
     {
+
+
         $children = BioMeasureChildren::find()->where(['id_measure' => $id_measure])->asArray()->one();
         $need_arr = explode(',', $children['children']);
 
-        $return['need'] = count($need_arr);
-        $data = (new \yii\db\Query())->select(['COUNT(*) as count'])->from(BioUserMeasure::tableName())->where(['user_id' => $user_id, 'measure_id' => $need_arr])->createCommand()->queryOne();
+        //$return['need'] = count($need_arr);
+       $realCount = (new \yii\db\Query())->select(['COUNT(*) as count'])->from(BioMeasure::tableName())->where("
+                id_measure IN (".$children['children'].") 
+                AND section = '0' 
+                AND ". self::commonWhereOptions($questionOptions) ."
+            ")->createCommand()->queryOne();
+
+        $return['need'] = $realCount['count'];
+        $data = (new \yii\db\Query())->select(['COUNT(*) as count'])->from(BioUserMeasure::tableName())->where(['user_id' => $questionOptions['user_id'], 'measure_id' => $need_arr])->createCommand()->queryOne();
 
         $return['answered'] = $data['count'];
 

@@ -1,5 +1,5 @@
 <?php
-$postdata = array(
+/*$postdata = array(
     'name' => '34523453wer45',
     'surname' => 'adb4d3871eeeaf17b5d98002676c2d68',
     //'password' => 'pat2',
@@ -15,7 +15,7 @@ $postdata = array(
     'license' => '12312371892371231'
      );
 
-$filePath = realpath('8.jpg');
+$filePath = realpath('8.jpg');*/
 
 /*$postdata = array(
     'token' => 'e974ecf5a71803917404bed52e5429b1',
@@ -26,7 +26,7 @@ $filePath = realpath('8.jpg');
     'notice_id' => 3,
 );*/
 
-$postdata = array(
+/*$postdata = array(
     //'token' => '4b37daa9c5ba3577827280a34919bd16',
     'token' => 'ceda0c7725ee32404c0a5812f513d8c5',
     'user_id' => 35,
@@ -39,16 +39,16 @@ $postdata = array(
     //'doctor_id' => 19,
     //'enabled' => 'all'
     //'file' => new CURLFile($filePath, 'image/jpeg', '123.jpg'),
-);
+);*/
 
 $postdata = array(
-    'token' => '1c823e1d3ee4c393af6e3a6a2925cee2',
-    'reception_date' => '2017-09-20',
+    'token' => '95159ca2f5c79c5d202ed685db46b40f',
+    'id_parent' => 2
 );
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');
 
-$url = 'user/get-day-schedule';
+$url = 'account/anketa';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'http://api.biogenom.ru/api/'.$url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
