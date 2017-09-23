@@ -16,6 +16,7 @@ use app\modules\api\models\db\BioUserNotice;
 use app\modules\api\models\db\BioClinicList;
 use app\modules\api\models\db\BioDoctorSchedule;
 use app\modules\api\models\db\BioRecordToDoctor;
+use app\modules\api\models\db\BioScheduleTemplates;
 use Yii;
 use yii\imagine\Image;
 use Imagine\Image\Box;
@@ -633,7 +634,7 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
-                $schedule = BioDoctorSchedule::deleteAll(['schedule_id' => Yii::$app->request->post('schedule_id')]);
+                $schedule = BioDoctorSchedule::deleteAll(['schedule_id' => Yii::$app->request->post('schedule_id'), 'doctor_id' => $this->user->id]);
                 if($schedule){
                     return [
                         'success' => true,
@@ -662,7 +663,7 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
-                $schedule = BioDoctorSchedule::find()->where(['schedule_id' => Yii::$app->request->post('schedule_id')])->one();
+                $schedule = BioDoctorSchedule::find()->where(['schedule_id' => Yii::$app->request->post('schedule_id'), 'doctor_id' => $this->user->id])->one();
                 if(!empty($schedule)){
                     $schedule->setAttributes(Yii::$app->request->post());
                     if ($schedule->validate()) {
@@ -770,7 +771,7 @@ class UserController extends _ApiController
     {
         if (!empty($this->user)) {
             if ($this->user->type == 'doctor') {
-                $schedules = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date')])->all();
+                $schedules = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('reception_date'), 'doctor_id' => $this->user->id])->all();
                 if(!empty($schedules)){
                     $schedule_ids = [];
                     $info = [];
@@ -794,6 +795,158 @@ class UserController extends _ApiController
                     return [
                         'success' => false,
                         'result' => "You don't have schedule for this date"
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionDeleteTemplate()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $template = BioScheduleTemplates::deleteAll(['template_id' => Yii::$app->request->post('template_id'), 'doctor_id' => $this->user->id]);
+                var_dump($template);
+                if ($template) {
+                    return [
+                        'success' => true,
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'Template does not exists'
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionGetScheduleTemplateData()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $template =  BioScheduleTemplates::find()->where(['template_id' => Yii::$app->request->post('template_id'), 'doctor_id' => $this->user->id])->one();
+                if(!empty($template)){
+                    $schedules = BioDoctorSchedule::find()->where(['reception_date' => $template->link_date, 'doctor_id' => $this->user->id])->all();
+                    $info = [];
+                    if(count($schedules)> 0){
+                        foreach ($schedules as $schedule){
+                            $info[$schedule->schedule_id] = $schedule->attributes;
+                            $info[$schedule->schedule_id]['clinic_name'] = BioRecordToDoctor::getClinicNameByScheduleId($schedule->schedule_id);
+                            $info[$schedule->schedule_id]['start_time_formated'] = date('H:i', strtotime($schedule->start_time));
+                            $info[$schedule->schedule_id]['end_time_formated'] = date('H:i', strtotime($schedule->end_time));
+                        }
+                        return [
+                            'success' => true,
+                            'result' => [
+                                'info' => $info
+                            ]
+                        ];
+                    } else {
+                        return [
+                            'success' => false,
+                            'result' => 'Schedule does not exists'
+                        ];
+                    }
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'Template does not exists'
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionGetDoctorsScheduleTemplates()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $templates =  BioScheduleTemplates::find()->where(['doctor_id' => $this->user->id])->all();
+                if(count($templates) > 0){
+                    $result = [];
+                    foreach ($templates as $template){
+                        $result[] = $template->attributes;
+                    }
+                    return [
+                        'success' => true,
+                        'result' => $result
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'You do not have templates'
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'result' => 'User does not have permission'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'result' => 'User does not exist'
+            ];
+        }
+    }
+
+    public function actionMakeScheduleTemplate()
+    {
+        if (!empty($this->user)) {
+            if ($this->user->type == 'doctor') {
+                $schedules = BioDoctorSchedule::find()->where(['reception_date' => Yii::$app->request->post('link_date'), 'doctor_id' => $this->user->id])->all();
+                if(count($schedules) > 0){
+                    $template = new BioScheduleTemplates();
+                    $template->doctor_id = $this->user->id;
+                    $template->template_name = Yii::$app->request->post('template_name');
+                    $template->link_date = Yii::$app->request->post('link_date');
+                    if($template->validate()){
+                        $template->save();
+                        return [
+                            'success' => true,
+                        ];
+                    } else {
+                        return [
+                            'success' => false,
+                            'result' => $template->getErrors(),
+                        ];
+                    }
+                } else {
+                    return [
+                        'success' => false,
+                        'result' => 'You do not have schedule for this date'
                     ];
                 }
             } else {
