@@ -51,30 +51,32 @@ class BioRecordToDoctor extends \yii\db\ActiveRecord
     public static function getFullSchedule($schedule_ids)
     {
         $result = [];
-        if(count($schedule_ids) > 0){
-            foreach ($schedule_ids as $schedule_id){
-                $schedule = self::find()->where(['schedule_id' =>$schedule_id])->all();
+        if (count($schedule_ids) > 0) {
+            foreach ($schedule_ids as $schedule_id) {
+                $schedule = self::find()->where(['schedule_id' => $schedule_id])->all();
                 $clinic_name = self::getClinicNameByScheduleId($schedule_id);
                 $price = self::getPriceByScheduleId($schedule_id);
-                if(count($schedule) > 0) {
-                    foreach ($schedule as $record){
-                        if(!empty($record->pacient_id)){
+                if (count($schedule) > 0) {
+                    foreach ($schedule as $record) {
+                        if (!empty($record->pacient_id)) {
                             $user = BioUser::findByUserId($record->pacient_id);
                             $pacient = $user->surname . ' ' . $user->name . ' ' . $user->patronymic;
                         } else {
                             $pacient = "Нет записи";
                         }
-                        $result[$record->record_id]['start_time'] = date('H:i', strtotime($record->start_time));
-                        $result[$record->record_id]['end_time'] = $record->end_time;
-                        $result[$record->record_id]['pacient_id'] = $record->pacient_id;
-                        $result[$record->record_id]['clinic_name'] = $clinic_name;
-                        $result[$record->record_id]['pacient_fio'] = $pacient;
-                        $result[$record->record_id]['price'] = $price;
+                        $start = date('H:i', strtotime($record->start_time));
+                        $key = strtotime($start);
+                        $result[$key]['start_time'] = $start;
+                        $result[$key]['end_time'] = $record->end_time;
+                        $result[$key]['pacient_id'] = $record->pacient_id;
+                        $result[$key]['clinic_name'] = $clinic_name;
+                        $result[$key]['pacient_fio'] = $pacient;
+                        $result[$key]['price'] = $price;
                     }
                 }
             }
         }
-
+        ksort($result);
         return $result;
     }
 
