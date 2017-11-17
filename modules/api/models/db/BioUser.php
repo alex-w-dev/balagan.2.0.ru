@@ -231,7 +231,14 @@ class BioUser extends \yii\db\ActiveRecord implements IdentityInterface
         }
         if ($user->type == 'doctor') {
             $doctor = BioUserDoctor::findByUserId($user->id);
-            $result['doctor_info'] = $doctor->attributes;
+            $sql="SELECT s.*
+              FROM bio_doctor_specializations s
+              WHERE s.id = {$doctor->attributes['specialization']}
+              ";
+            $specs = Yii::$app->db
+                ->createCommand($sql)
+                ->queryAll();
+            $result['doctor_info'] = array_merge($doctor->attributes,['spec_name' => $specs[0]['name']]);
         }
         if ($user->type == 'partner') {
             $partner = BioUserPartner::findByUserId($user->id);

@@ -16,8 +16,8 @@ class BlackResult extends Model
 {
     public static function getCurlAddress()
     {
-        // return "http://fcrisk.ru:30851/index.php";
-        return "http://fcrisk.ru:3306/RemoteServer.php";
+        return "http://fcrisk.ru:30851/index.php";
+        //return "http://fcrisk.ru:3306/RemoteServer.php";
     }
 
     public static function getCurlTemplate()

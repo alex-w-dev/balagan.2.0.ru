@@ -42,8 +42,10 @@ $filePath = realpath('8.jpg');*/
 );*/
 
 $postdata = array(
-    'token' => '95159ca2f5c79c5d202ed685db46b40f',
-    'id_parent' => 2
+    'token' => 'ceda0c7725ee32404c0a5812f513d8c5',
+    'reception_date' => '2017-09-23',
+    'template_id' => 1,
+    'template_name' => 'Шаблон на субботу',
 );
 
 //$postdata = array('image' => '@{'.$filePath.'};type=image/jpeg');

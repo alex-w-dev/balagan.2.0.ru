@@ -36,6 +36,8 @@ class RegistrationForm extends Model
     public $type;
     public $rememberMe = true;
     public $license;
+    public $text_about;
+    public $specialization;
 
     private $_user = false;
 
@@ -50,10 +52,10 @@ class RegistrationForm extends Model
     public function scenarios()
     {
         return [
-            self::SCENARIO_DOCTOR => ['license', 'phone', 'name', 'surname', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_DOCTOR => ['specialization', 'text_about', 'license', 'phone', 'name', 'surname', 'password', 'email', 'type' , 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_PACIENT => ['district_code', 'phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_PACIENT_EDIT => ['district_code', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
-            self::SCENARIO_DOCTOR_EDIT => ['license', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
+            self::SCENARIO_DOCTOR_EDIT => ['specialization', 'text_about', 'license', 'phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_PARTNER => ['phone', 'name', 'surname', 'password', 'email', 'type', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
             self::SCENARIO_PARTNER_EDIT => ['phone', 'name', 'surname', 'male', 'birthDay', 'birthMonth', 'birthYear', 'patronymic'],
         ];
@@ -74,6 +76,8 @@ class RegistrationForm extends Model
             ['male', 'integer', 'min' => 0, 'max' => 1],
             [['polis'], 'string', 'max' => 45],
             [['license'], 'string', 'max' => 120],
+            [['text_about'], 'string', 'max' => 99999],
+            ['specialization', 'integer'],
             //['district_name', 'in', 'range' => $this->getDistricts(), 'message' => 'Пожалуйста выберите регион проживания.'],
             ['birthDay', 'in', 'range' => $this->getBirthDays(), 'message' => 'Пожалуйста выберите день.'],
             ['birthMonth', 'in', 'range' => [1,2,3,4,5,6,7,8,9,10,11,12], 'message' => 'Пожалуйста выберите месяц.'],
@@ -250,6 +254,8 @@ class RegistrationForm extends Model
                 $doctor = BioUserDoctor::findOne(['user_id' => $id]);
                 $doctor->setAttributes([
                     'license' => $this->license,
+                    'text_about' => $this->text_about,
+                    'specialization' => $this->specialization,
                 ]);
                 $doctor->update();
             } elseif ($user->type == 'partner'){

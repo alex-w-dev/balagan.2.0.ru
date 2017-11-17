@@ -100,13 +100,19 @@ class AccountController extends _ApiController
     public function actionAnketa()
     {
         if (!empty($this->user)){
-            $pacient = BioUserPacient::findByUserId($this->user->id);
             $questionOptions = [
                 'user_id' => $this->user->id,
-                'male' => BioUserPacient::getPacientMale($pacient),
-                'age' => BioUserPacient::getPacientAge($pacient->user_id, 'months')
+                'male' => 2,
+                'age' => 600
             ];
-
+            if($this->user->type == 'pacient') {
+                $pacient = BioUserPacient::findByUserId($this->user->id);
+                $questionOptions = [
+                    'user_id' => $this->user->id,
+                    'male' => BioUserPacient::getPacientMale($pacient->user_id),
+                    'age' => BioUserPacient::getPacientAge($pacient->user_id, 'months')
+                ];
+            }
             /* отображать вопросы смешанно , или строго раздельно группы от вопросов*/
             $MIXED =  !empty(Yii::$app->request->post('mixed')) ? Yii::$app->request->post('mixed') : false;
             $id_parent = !empty(Yii::$app->request->post('id_parent')) ? Yii::$app->request->post('id_parent') : 0;

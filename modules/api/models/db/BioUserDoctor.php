@@ -28,6 +28,8 @@ class BioUserDoctor extends \yii\db\ActiveRecord
             [['user_id'], 'required'],
             [['user_id'], 'integer'],
             [['license'], 'string', 'max' => 120],
+            [['text_about'], 'string', 'max' => 9999],
+            [['specialization'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => BioUser::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -39,6 +41,8 @@ class BioUserDoctor extends \yii\db\ActiveRecord
     {
         return [
             'license' => 'license',
+            'text_about' => 'text_about',
+            'specialization' => 'specialization',
             'user_id' => 'User ID',
         ];
     }
